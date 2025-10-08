@@ -82,23 +82,23 @@ export default async function handler(req, res) {
           logPrefix = '[Local Mandis API]';
           break;
         case 'urgency-patterns':
-          return res.status(200).json({
-            status: 1,
-            message: 'Urgency patterns not available, using fallback',
-            result: {}
-          });
+            return res.status(200).json({
+              status: 1,
+              message: 'Urgency patterns not available, using fallback',
+              result: {}
+            });
         case 'category-keywords':
-          return res.status(200).json({
-            status: 1,
-            message: 'Category keywords not available, using fallback',
-            result: {}
-          });
+            return res.status(200).json({
+              status: 1,
+              message: 'Category keywords not available, using fallback',
+              result: {}
+            });
         case 'roles':
           targetUrl = `${apiBaseUrl}/roles`;
           logPrefix = '[Roles API]';
           break;
         case 'health-check':
-          return res.status(200).json({
+            return res.status(200).json({
             status: 1,
             message: 'API is healthy',
             result: { timestamp: new Date().toISOString() }
@@ -171,12 +171,12 @@ export default async function handler(req, res) {
         if (pathname.startsWith('/news/filter-multi-categories')) {
           logPrefix = '[News Filter API]';
         }
-      } else {
-        return res.status(400).json({ 
-          status: 0, 
+    } else {
+      return res.status(400).json({ 
+        status: 0, 
           message: 'Missing required parameter. Use type, action, id, or provide a valid path',
-          result: null 
-        });
+        result: null 
+      });
       }
     }
 
@@ -278,9 +278,9 @@ export default async function handler(req, res) {
       console.log(`${logPrefix} Final categories result: ${data.result.length} categories`);
       console.log(`${logPrefix} Final category names:`, data.result.map(cat => cat.category_name));
       
-      // If still no categories, return hardcoded fallback with real IDs
-      if (data.result.length === 0) {
-        console.log(`${logPrefix} No active categories found, using hardcoded fallback`);
+      // Only use hardcoded fallback for English language if no categories found
+      if (data.result.length === 0 && query.language_id === '5dd95034-d533-4b09-8687-cd2ed3682ab6') {
+        console.log(`${logPrefix} No active categories found for English, using hardcoded fallback`);
         data.result = [
           {
             id: "8f8d4645-fe69-449f-8cc9-7b86f739d62b",
@@ -344,6 +344,10 @@ export default async function handler(req, res) {
           }
         ];
         console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} categories`);
+      } else if (data.result.length === 0) {
+        console.log(`${logPrefix} No active categories found for language ${query.language_id}, returning empty array`);
+        // For non-English languages, return empty array if no categories found
+        // This allows the frontend to handle the case appropriately
       }
     }
     
@@ -351,9 +355,9 @@ export default async function handler(req, res) {
     if (type === 'states' && data.status === 1 && data.result) {
       console.log(`${logPrefix} Processing states: ${data.result.length} total from external API`);
       
-      // If no states returned, provide fallback
-      if (data.result.length === 0) {
-        console.log(`${logPrefix} No states found, using hardcoded fallback`);
+      // If no states returned, provide fallback only for English
+      if (data.result.length === 0 && query.language_id === '5dd95034-d533-4b09-8687-cd2ed3682ab6') {
+        console.log(`${logPrefix} No states found for English, using hardcoded fallback`);
         data.result = [
           {
             id: "b6be8d5c-f276-4d63-b878-6fc765180ccf",
@@ -367,6 +371,9 @@ export default async function handler(req, res) {
           }
         ];
         console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} states`);
+      } else if (data.result.length === 0) {
+        console.log(`${logPrefix} No states found for language ${query.language_id}, returning empty array`);
+        // For non-English languages, return empty array if no states found
       } else {
         console.log(`${logPrefix} Using external API states: ${data.result.length} states`);
         console.log(`${logPrefix} State names:`, data.result.map(state => state.state_name));
@@ -377,9 +384,9 @@ export default async function handler(req, res) {
     if (type === 'districts' && data.status === 1 && data.result) {
       console.log(`${logPrefix} Processing districts: ${data.result.length} total from external API`);
       
-      // If no districts returned, provide fallback
-      if (data.result.length === 0) {
-        console.log(`${logPrefix} No districts found, using hardcoded fallback`);
+      // If no districts returned, provide fallback only for English
+      if (data.result.length === 0 && query.language_id === '5dd95034-d533-4b09-8687-cd2ed3682ab6') {
+        console.log(`${logPrefix} No districts found for English, using hardcoded fallback`);
         data.result = [
           {
             id: "hyderabad-district-id",
@@ -393,6 +400,9 @@ export default async function handler(req, res) {
           }
         ];
         console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} districts`);
+      } else if (data.result.length === 0) {
+        console.log(`${logPrefix} No districts found for language ${query.language_id}, returning empty array`);
+        // For non-English languages, return empty array if no districts found
       } else {
         console.log(`${logPrefix} Using external API districts: ${data.result.length} districts`);
         console.log(`${logPrefix} District names:`, data.result.map(district => district.name));
