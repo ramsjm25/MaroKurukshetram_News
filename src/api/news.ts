@@ -19,10 +19,19 @@ export const getFilteredNews = async (
   params: NewsFilterParams
 ): Promise<NewsResponse> => {
   try {
-    // Tell Axios the expected type
+    // Use the correct endpoint that our API handler supports
     const response = await apiClient.get<ApiResponse<NewsResponse>>(
-      "/news/filter-advanced",
-      { params }
+      "/news/filter-multi-categories",
+      { 
+        params: {
+          language_id: params.language_id,
+          categoryIds: params.categoryId, // Convert single categoryId to categoryIds
+          state_id: params.state_id,
+          district_id: params.district_id,
+          page: params.page || 1,
+          limit: 10
+        }
+      }
     );
 
     if (response.data.status === 1) {
