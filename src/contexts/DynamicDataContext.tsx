@@ -57,6 +57,9 @@ interface DynamicDataContextType {
   // Reset function
   resetToDefaults: () => void;
   
+  // Set default selections function
+  setDefaultSelections: () => void;
+  
   // Refresh functions
   refreshLanguages: () => void;
   refreshStates: () => void;
@@ -260,8 +263,12 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   React.useEffect(() => {
     if (languages.length > 0 && !selectedLanguage) {
       console.log('[DynamicData] Available languages:', languages.map(l => l.language_name));
-      // Select first available language (no hardcoded preferences)
-      const defaultLang = languages[0];
+      // Try to find English first, fallback to first available
+      const defaultLang = languages.find(lang => 
+        lang.language_name.toLowerCase().includes('english') || 
+        lang.language_code.toLowerCase() === 'en' ||
+        lang.language_name.toLowerCase() === 'english'
+      ) || languages[0];
       
       if (defaultLang) {
         setSelectedLanguage(defaultLang);
@@ -274,8 +281,15 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   React.useEffect(() => {
     if (states.length > 0 && !selectedState && selectedLanguage) {
       console.log('[DynamicData] Available states:', states.map(s => s.state_name));
-      // Select first available state (no hardcoded preferences)
-      const defaultState = states[0];
+      // Try to find Telangana first, fallback to first available
+      const defaultState = states.find(state => 
+        state.state_name.toLowerCase().includes('telangana') ||
+        state.state_name.toLowerCase() === 'telangana' ||
+        state.state_name.toLowerCase().includes('తెలంగాణ') ||
+        state.state_name.toLowerCase().includes('தெலுங்கானா') ||
+        state.state_name.toLowerCase().includes('ತೆಲಂಗಾಣ') ||
+        state.state_name.toLowerCase().includes('तेलंगाना')
+      ) || states[0];
       
       if (defaultState) {
         setSelectedState(defaultState);
@@ -288,8 +302,15 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   React.useEffect(() => {
     if (districts.length > 0 && !selectedDistrict && selectedState) {
       console.log('[DynamicData] Available districts:', districts.map(d => d.name));
-      // Select first available district (no hardcoded preferences)
-      const defaultDistrict = districts[0];
+      // Try to find Hyderabad first, fallback to first available
+      const defaultDistrict = districts.find(district => 
+        district.name.toLowerCase().includes('hyderabad') ||
+        district.name.toLowerCase() === 'hyderabad' ||
+        district.name.toLowerCase().includes('హైదరాబాద్') ||
+        district.name.toLowerCase().includes('ஹைதராபாத்') ||
+        district.name.toLowerCase().includes('ಹೈದರಾಬಾದ್') ||
+        district.name.toLowerCase().includes('हैदराबाद')
+      ) || districts[0];
       
       if (defaultDistrict) {
         setSelectedDistrict(defaultDistrict);
@@ -345,8 +366,77 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     setSelectedDistrict(null);
     setSelectedCategories([]);
     
+    // Set default selections after a short delay to ensure state is reset
+    setTimeout(() => {
+      if (languages.length > 0 && states.length > 0 && districts.length > 0) {
+        setDefaultSelections();
+      }
+    }, 100);
+    
     console.log('[DynamicData] Reset to defaults completed');
   };
+
+  // Set default selections function (English, Telangana, Hyderabad)
+  const setDefaultSelections = React.useCallback(() => {
+    console.log('[DynamicData] Setting default selections...');
+    
+    // Set default language (English)
+    if (languages.length > 0) {
+      const englishLang = languages.find(lang => 
+        lang.language_name.toLowerCase().includes('english') || 
+        lang.language_code.toLowerCase() === 'en' ||
+        lang.language_name.toLowerCase() === 'english'
+      );
+      if (englishLang) {
+        setSelectedLanguage(englishLang);
+        console.log('[DynamicData] Set default language to English');
+      }
+    }
+    
+    // Set default state (Telangana)
+    if (states.length > 0) {
+      const telanganaState = states.find(state => 
+        state.state_name.toLowerCase().includes('telangana') ||
+        state.state_name.toLowerCase() === 'telangana' ||
+        state.state_name.toLowerCase().includes('తెలంగాణ') ||
+        state.state_name.toLowerCase().includes('தெலுங்கானா') ||
+        state.state_name.toLowerCase().includes('ತೆಲಂಗಾಣ') ||
+        state.state_name.toLowerCase().includes('तेलंगाना')
+      );
+      if (telanganaState) {
+        setSelectedState(telanganaState);
+        console.log('[DynamicData] Set default state to Telangana');
+      }
+    }
+    
+    // Set default district (Hyderabad)
+    if (districts.length > 0) {
+      const hyderabadDistrict = districts.find(district => 
+        district.name.toLowerCase().includes('hyderabad') ||
+        district.name.toLowerCase() === 'hyderabad' ||
+        district.name.toLowerCase().includes('హైదరాబాద్') ||
+        district.name.toLowerCase().includes('ஹைதராபாத்') ||
+        district.name.toLowerCase().includes('ಹೈದರಾಬಾದ್') ||
+        district.name.toLowerCase().includes('हैदराबाद')
+      );
+      if (hyderabadDistrict) {
+        setSelectedDistrict(hyderabadDistrict);
+        console.log('[DynamicData] Set default district to Hyderabad');
+      }
+    }
+  }, [languages, states, districts]);
+
+  // Set default selections on page load if no saved selections exist
+  React.useEffect(() => {
+    const hasSavedSelections = sessionStorage.getItem('selectedLanguage') || 
+                              sessionStorage.getItem('selectedState') || 
+                              sessionStorage.getItem('selectedDistrict');
+    
+    if (!hasSavedSelections && languages.length > 0 && states.length > 0 && districts.length > 0) {
+      console.log('[DynamicData] No saved selections found, setting default selections...');
+      setDefaultSelections();
+    }
+  }, [languages, states, districts, setDefaultSelections]);
 
   // Context value
   const contextValue: DynamicDataContextType = {
@@ -395,6 +485,9 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     
     // Reset function
     resetToDefaults,
+    
+    // Set default selections function
+    setDefaultSelections,
     
     // Refresh functions
     refreshLanguages,
