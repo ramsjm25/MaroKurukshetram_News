@@ -255,7 +255,7 @@ export default async function handler(req, res) {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const pathname = url.pathname.replace('/api', '');
       
-      if (pathname.startsWith('/news/') || pathname.startsWith('/auth/') || pathname.startsWith('/local-mandi-categories') || pathname.startsWith('/e-newspapers')) {
+      if (pathname.startsWith('/news/') || pathname.startsWith('/auth/') || pathname.startsWith('/local-mandi-categories') || pathname.startsWith('/e-newspapers') || pathname.startsWith('/local-mandis')) {
         targetUrl = `${apiBaseUrl}${pathname}`;
         logPrefix = '[Direct API]';
       } else {
@@ -332,11 +332,20 @@ export default async function handler(req, res) {
     
     // Apply specific filtering for categories
     if (type === 'categories' && data.status === 1 && data.result) {
+      console.log(`${logPrefix} Raw categories before filtering:`, data.result.length);
       data.result = data.result.filter(category => 
         category.is_active === 1 && category.is_deleted === 0
       );
       console.log(`${logPrefix} Filtered to ${data.result.length} active categories`);
     }
+    
+    // Debug logging for all responses
+    console.log(`${logPrefix} Final response:`, {
+      status: data.status,
+      message: data.message,
+      resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
+      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
+    });
     
     res.status(response.status).json(data);
   } catch (error) {

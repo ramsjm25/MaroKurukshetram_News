@@ -5,12 +5,19 @@
     },
     "api/test.js": {
       "maxDuration": 10
+    },
+    "api/env-check.js": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
     {
       "source": "/api/test",
       "destination": "/api/test"
+    },
+    {
+      "source": "/api/env-check",
+      "destination": "/api/env-check"
     },
     {
       "source": "/api/(.*)",

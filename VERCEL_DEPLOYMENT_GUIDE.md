@@ -20,6 +20,7 @@ The application is now configured to work with Vercel's serverless functions:
 
 - **Main API Handler**: `/api/index.js` - Handles all API requests
 - **Test Endpoint**: `/api/test.js` - Test API connectivity
+- **Environment Check**: `/api/env-check.js` - Check environment variables
 - **Vercel Rewrites**: All `/api/*` requests are routed to the main handler
 
 ### Supported Endpoints
@@ -49,9 +50,10 @@ The application is now configured to work with Vercel's serverless functions:
 
 After deployment, test the API connectivity:
 
-1. Visit `https://your-domain.vercel.app/api/test` to test API connectivity
-2. Check Vercel function logs for any errors
-3. Test the main endpoints using the frontend
+1. **Environment Check**: Visit `https://your-domain.vercel.app/api/env-check` to verify environment variables
+2. **API Test**: Visit `https://your-domain.vercel.app/api/test` to test API connectivity
+3. **Individual Endpoints**: Test specific endpoints using the frontend or curl
+4. **Function Logs**: Check Vercel function logs for detailed error information
 
 ## Troubleshooting
 
@@ -61,13 +63,52 @@ After deployment, test the API connectivity:
 2. **Timeout Errors**: Functions have 30-second timeout (10 seconds for test)
 3. **Environment Variables**: Ensure `API_BASE_URL` is set in Vercel
 4. **Function Logs**: Check Vercel function logs for detailed error information
+5. **Empty Results**: Check if external API is returning data correctly
 
 ### Debug Steps
 
-1. Check Vercel function logs
-2. Test individual endpoints using curl or Postman
-3. Verify environment variables are set correctly
-4. Check external API connectivity
+1. **Check Environment Variables**:
+   ```bash
+   curl https://your-domain.vercel.app/api/env-check
+   ```
+
+2. **Test API Connectivity**:
+   ```bash
+   curl https://your-domain.vercel.app/api/test
+   ```
+
+3. **Test Specific Endpoints**:
+   ```bash
+   # Test languages
+   curl "https://your-domain.vercel.app/api?type=languages"
+   
+   # Test categories
+   curl "https://your-domain.vercel.app/api?type=categories&language_id=5dd95034-d533-4b09-8687-cd2ed3682ab6"
+   
+   # Test e-newspapers
+   curl "https://your-domain.vercel.app/api/e-newspapers?language_id=5dd95034-d533-4b09-8687-cd2ed3682ab6"
+   ```
+
+4. **Check Vercel Function Logs**:
+   - Go to Vercel Dashboard > Functions
+   - Click on the function name
+   - Check the logs for errors
+
+5. **Verify External API**:
+   ```bash
+   curl "https://phpstack-1520234-5847937.cloudwaysapps.com/api/v1/news/languages"
+   ```
+
+### Expected Response Format
+
+All API endpoints should return responses in this format:
+```json
+{
+  "status": 1,
+  "message": "Success message",
+  "result": [...] // Array of data
+}
+```
 
 ## Deployment Commands
 
@@ -81,3 +122,13 @@ vercel --prod
 # Or use Vercel CLI
 vercel deploy
 ```
+
+## Quick Fixes
+
+If you're still experiencing issues:
+
+1. **Redeploy**: Sometimes a fresh deployment fixes issues
+2. **Check Environment Variables**: Ensure `API_BASE_URL` is set correctly
+3. **Clear Cache**: Clear browser cache and try again
+4. **Check External API**: Verify the external API is working
+5. **Function Logs**: Check Vercel function logs for specific errors

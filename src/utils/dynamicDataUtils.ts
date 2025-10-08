@@ -275,8 +275,7 @@ export const fetchAndCacheData = async <T>(
       const { type } = params;
       
       // Get API base URL from environment variables
-      const apiBaseUrl = process.env.REACT_APP_API_BASE_URL || 
-                        process.env.VITE_API_BASE_URL || 
+      const apiBaseUrl = (import.meta as any).env?.VITE_API_BASE_URL || 
                         'https://phpstack-1520234-5847937.cloudwaysapps.com/api/v1';
       
       switch (type) {
