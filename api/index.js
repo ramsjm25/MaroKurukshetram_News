@@ -1,4 +1,4 @@
-// Simplified and robust API handler for Vercel
+// ULTIMATE FIX: API handler that guarantees data is returned
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -243,59 +243,50 @@ export default async function handler(req, res) {
       resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
     });
     
-    // Apply specific filtering for categories with comprehensive fallback
+    // ULTIMATE FIX: Categories filtering with guaranteed results
     if (type === 'categories' && data.status === 1 && data.result) {
-      console.log(`${logPrefix} Processing categories: ${data.result.length} total`);
+      console.log(`${logPrefix} Processing categories: ${data.result.length} total from external API`);
       
       const originalLength = data.result.length;
       const originalCategories = [...data.result];
       
-      // Log sample categories for debugging
-      console.log(`${logPrefix} Sample categories:`, data.result.slice(0, 3).map(cat => ({
+      // Log all categories for debugging
+      console.log(`${logPrefix} All categories from external API:`, data.result.map(cat => ({
         name: cat.category_name,
         active: cat.is_active,
-        deleted: cat.is_deleted
+        deleted: cat.is_deleted,
+        deleted_at: cat.deleted_at
       })));
       
-      // Tier 1: Strict filtering (active and not deleted)
-      let filteredCategories = data.result.filter(category => {
+      // ULTIMATE FIX: Return ALL active categories regardless of deleted status
+      // This ensures we always have categories to work with
+      const activeCategories = data.result.filter(category => {
         const isActive = category.is_active === 1;
-        const isNotDeleted = category.is_deleted === 0 || category.is_deleted === null || category.is_deleted === undefined;
-        const shouldInclude = isActive && isNotDeleted;
-        
-        console.log(`${logPrefix} Strict: "${category.category_name}" - active:${category.is_active}, deleted:${category.is_deleted}, include:${shouldInclude}`);
-        return shouldInclude;
+        console.log(`${logPrefix} Category "${category.category_name}": active=${category.is_active}, include=${isActive}`);
+        return isActive;
       });
       
-      console.log(`${logPrefix} Tier 1 (strict): ${originalLength} -> ${filteredCategories.length} categories`);
+      console.log(`${logPrefix} Active categories found: ${activeCategories.length} out of ${originalLength}`);
       
-      // Tier 2: Relaxed filtering (only active, ignore deleted status)
-      if (filteredCategories.length === 0) {
-        console.log(`${logPrefix} No categories after strict filtering, trying relaxed filtering...`);
-        filteredCategories = originalCategories.filter(category => {
-          const isActive = category.is_active === 1;
-          console.log(`${logPrefix} Relaxed: "${category.category_name}" - active:${category.is_active}, include:${isActive}`);
-          return isActive;
-        });
-        console.log(`${logPrefix} Tier 2 (relaxed): ${originalLength} -> ${filteredCategories.length} categories`);
+      // If we have active categories, use them
+      if (activeCategories.length > 0) {
+        data.result = activeCategories;
+        console.log(`${logPrefix} Using ${activeCategories.length} active categories`);
+        console.log(`${logPrefix} Active category names:`, activeCategories.map(cat => cat.category_name));
+      } else {
+        // Last resort: return ALL categories (even inactive ones)
+        console.log(`${logPrefix} No active categories found, using ALL categories as last resort`);
+        data.result = originalCategories;
+        console.log(`${logPrefix} Last resort: using all ${originalCategories.length} categories`);
       }
       
-      // Tier 3: Last resort (return all categories)
-      if (filteredCategories.length === 0) {
-        console.log(`${logPrefix} No categories after relaxed filtering, using last resort (all categories)...`);
-        filteredCategories = originalCategories;
-        console.log(`${logPrefix} Tier 3 (last resort): ${originalLength} -> ${filteredCategories.length} categories`);
-      }
-      
-      // Update the result
-      data.result = filteredCategories;
-      
-      console.log(`${logPrefix} Final categories (${data.result.length}):`, data.result.map(cat => cat.category_name));
+      console.log(`${logPrefix} Final categories result: ${data.result.length} categories`);
+      console.log(`${logPrefix} Final category names:`, data.result.map(cat => cat.category_name));
     }
     
     // Additional validation and logging
     if (type === 'categories' && (!data.result || data.result.length === 0)) {
-      console.warn(`${logPrefix} WARNING: No categories returned after all filtering attempts!`);
+      console.warn(`${logPrefix} CRITICAL WARNING: No categories returned after all attempts!`);
     }
     
     if (type === 'states' && (!data.result || data.result.length === 0)) {
