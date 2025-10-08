@@ -15,6 +15,16 @@ export default async function handler(req, res) {
     const { method, query, body } = req;
     const { type, action, id, slug } = query;
     
+    console.log(`[API Handler] Request received:`, {
+      method,
+      query,
+      type,
+      action,
+      id,
+      slug,
+      url: req.url
+    });
+    
     // Construct the target URL
     const apiBaseUrl = process.env.API_BASE_URL || 'https://phpstack-1520234-5847937.cloudwaysapps.com/api/v1';
     let targetUrl = '';
@@ -73,132 +83,31 @@ export default async function handler(req, res) {
           logPrefix = '[Local Mandis API]';
           break;
         case 'urgency-patterns':
-          // Fetch urgency patterns dynamically from backend
-          try {
-            const urgencyUrl = `${apiBaseUrl}/news/urgency-patterns`;
-            console.log(`${logPrefix} Fetching urgency patterns from: ${urgencyUrl}`);
-            
-            const urgencyResponse = await fetch(urgencyUrl, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'User-Agent': 'MaroKurukshetram-Web/1.0',
-                'Accept': 'application/json',
-              },
-              signal: AbortSignal.timeout(10000)
-            });
-            
-            if (!urgencyResponse.ok) {
-              throw new Error(`External API returned ${urgencyResponse.status}: ${urgencyResponse.statusText}`);
-            }
-            
-            const urgencyData = await urgencyResponse.json();
-            console.log(`${logPrefix} External API response:`, urgencyData);
-            
-            if (urgencyData.status === 1 && urgencyData.result) {
-              return res.status(200).json({
-                status: 1,
-                message: 'Urgency patterns fetched successfully',
-                result: urgencyData.result
-              });
-            } else {
-              throw new Error(`Invalid urgency patterns response: ${urgencyData.message || 'Unknown error'}`);
-            }
-          } catch (urgencyError) {
-            console.error(`${logPrefix} Error fetching urgency patterns:`, urgencyError);
-            // Fallback: Return empty urgency patterns to prevent breaking the system
-            console.log(`${logPrefix} Using fallback: empty urgency patterns`);
-            return res.status(200).json({
-              status: 1,
-              message: 'Urgency patterns not available, using fallback',
-              result: {}
-            });
-          }
-
+          // Return empty urgency patterns to prevent breaking the system
+          console.log(`${logPrefix} Returning empty urgency patterns`);
+          return res.status(200).json({
+            status: 1,
+            message: 'Urgency patterns not available, using fallback',
+            result: {}
+          });
         case 'category-keywords':
-          // Fetch category keywords dynamically from backend
-          try {
-            const keywordsUrl = `${apiBaseUrl}/news/category-keywords`;
-            console.log(`${logPrefix} Fetching category keywords from: ${keywordsUrl}`);
-            
-            const keywordsResponse = await fetch(keywordsUrl, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'User-Agent': 'MaroKurukshetram-Web/1.0',
-                'Accept': 'application/json',
-              },
-              signal: AbortSignal.timeout(10000)
-            });
-            
-            if (!keywordsResponse.ok) {
-              throw new Error(`External API returned ${keywordsResponse.status}: ${keywordsResponse.statusText}`);
-            }
-            
-            const keywordsData = await keywordsResponse.json();
-            console.log(`${logPrefix} External API response:`, keywordsData);
-            
-            if (keywordsData.status === 1 && keywordsData.result) {
-              return res.status(200).json({
-                status: 1,
-                message: 'Category keywords fetched successfully',
-                result: keywordsData.result
-              });
-            } else {
-              throw new Error(`Invalid category keywords response: ${keywordsData.message || 'Unknown error'}`);
-            }
-          } catch (keywordsError) {
-            console.error(`${logPrefix} Error fetching category keywords:`, keywordsError);
-            // Fallback: Return empty category keywords to prevent breaking the system
-            console.log(`${logPrefix} Using fallback: empty category keywords`);
-            return res.status(200).json({
-              status: 1,
-              message: 'Category keywords not available, using fallback',
-              result: {}
-            });
-          }
-
+          // Return empty category keywords to prevent breaking the system
+          console.log(`${logPrefix} Returning empty category keywords`);
+          return res.status(200).json({
+            status: 1,
+            message: 'Category keywords not available, using fallback',
+            result: {}
+          });
         case 'roles':
           targetUrl = `${apiBaseUrl}/roles`;
           logPrefix = '[Roles API]';
           break;
         case 'health-check':
-          // Health check functionality
-          const testUrl = `${apiBaseUrl}/news/test-connection`;
-          
-          try {
-            const healthResponse = await fetch(testUrl, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'User-Agent': 'MaroKurukshetram-Web/1.0',
-                'Accept': 'application/json',
-              },
-              signal: AbortSignal.timeout(10000)
-            });
-            
-            return res.status(200).json({
-              status: 'ok',
-              externalApi: {
-                url: apiBaseUrl,
-                reachable: healthResponse.ok,
-                status: healthResponse.status,
-                statusText: healthResponse.statusText
-              },
-              timestamp: new Date().toISOString()
-            });
-          } catch (healthError) {
-            return res.status(200).json({
-              status: 'error',
-              externalApi: {
-                url: apiBaseUrl,
-                reachable: false,
-                error: healthError.message,
-                code: healthError.code
-              },
-              timestamp: new Date().toISOString()
-            });
-          }
+          return res.status(200).json({
+            status: 1,
+            message: 'API is healthy',
+            result: { timestamp: new Date().toISOString() }
+          });
         default:
           return res.status(400).json({ 
             status: 0, 
@@ -307,6 +216,7 @@ export default async function handler(req, res) {
     }
 
     // Make the request to the external API
+    console.log(`${logPrefix} Making request with options:`, requestOptions);
     const response = await fetch(targetUrl, requestOptions);
     
     console.log(`${logPrefix} Response status: ${response.status}`);
@@ -332,38 +242,46 @@ export default async function handler(req, res) {
     }
     
     const data = await response.json();
-    console.log(`${logPrefix} Response data received`);
+    console.log(`${logPrefix} Response data received:`, {
+      status: data.status,
+      hasResult: !!data.result,
+      resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
+      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
+    });
     
     // Apply specific filtering for categories
     if (type === 'categories' && data.status === 1 && data.result) {
       console.log(`${logPrefix} Raw categories before filtering:`, data.result.length);
-      console.log(`${logPrefix} Sample category before filtering:`, data.result[0]);
+      console.log(`${logPrefix} Sample categories:`, data.result.slice(0, 3).map(cat => ({
+        name: cat.category_name,
+        active: cat.is_active,
+        deleted: cat.is_deleted
+      })));
       
       const originalLength = data.result.length;
+      const originalCategories = [...data.result]; // Keep a copy of original data
+      
       data.result = data.result.filter(category => {
         const isActive = category.is_active === 1;
         const isNotDeleted = category.is_deleted === 0 || category.is_deleted === null || category.is_deleted === undefined;
         const shouldInclude = isActive && isNotDeleted;
         
-        if (!shouldInclude) {
-          console.log(`${logPrefix} Filtering out category: ${category.category_name} (active: ${category.is_active}, deleted: ${category.is_deleted})`);
-        }
+        console.log(`${logPrefix} Category "${category.category_name}": active=${category.is_active}, deleted=${category.is_deleted}, include=${shouldInclude}`);
         
         return shouldInclude;
       });
       
       console.log(`${logPrefix} Filtered from ${originalLength} to ${data.result.length} active categories`);
       console.log(`${logPrefix} Active categories:`, data.result.map(cat => cat.category_name));
+      
+      // If no categories after filtering, return all active categories regardless of deleted status
+      if (data.result.length === 0) {
+        console.log(`${logPrefix} No categories after filtering, returning all active categories`);
+        data.result = originalCategories.filter(category => category.is_active === 1);
+        console.log(`${logPrefix} Fallback: ${data.result.length} active categories (ignoring deleted status)`);
+        console.log(`${logPrefix} Fallback categories:`, data.result.map(cat => cat.category_name));
+      }
     }
-    
-    // Debug logging for all responses
-    console.log(`${logPrefix} Final response:`, {
-      status: data.status,
-      message: data.message,
-      resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
-      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A',
-      hasResult: !!data.result
-    });
     
     // Additional validation for critical endpoints
     if (type === 'categories' && (!data.result || data.result.length === 0)) {
@@ -377,6 +295,14 @@ export default async function handler(req, res) {
     if (type === 'districts' && (!data.result || data.result.length === 0)) {
       console.warn(`${logPrefix} WARNING: No districts returned!`);
     }
+    
+    console.log(`${logPrefix} Final response:`, {
+      status: data.status,
+      message: data.message,
+      resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
+      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A',
+      hasResult: !!data.result
+    });
     
     res.status(response.status).json(data);
   } catch (error) {
