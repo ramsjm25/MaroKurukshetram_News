@@ -337,10 +337,23 @@ export default async function handler(req, res) {
     // Apply specific filtering for categories
     if (type === 'categories' && data.status === 1 && data.result) {
       console.log(`${logPrefix} Raw categories before filtering:`, data.result.length);
-      data.result = data.result.filter(category => 
-        category.is_active === 1 && (category.is_deleted === 0 || category.is_deleted === null)
-      );
-      console.log(`${logPrefix} Filtered to ${data.result.length} active categories`);
+      console.log(`${logPrefix} Sample category before filtering:`, data.result[0]);
+      
+      const originalLength = data.result.length;
+      data.result = data.result.filter(category => {
+        const isActive = category.is_active === 1;
+        const isNotDeleted = category.is_deleted === 0 || category.is_deleted === null || category.is_deleted === undefined;
+        const shouldInclude = isActive && isNotDeleted;
+        
+        if (!shouldInclude) {
+          console.log(`${logPrefix} Filtering out category: ${category.category_name} (active: ${category.is_active}, deleted: ${category.is_deleted})`);
+        }
+        
+        return shouldInclude;
+      });
+      
+      console.log(`${logPrefix} Filtered from ${originalLength} to ${data.result.length} active categories`);
+      console.log(`${logPrefix} Active categories:`, data.result.map(cat => cat.category_name));
     }
     
     // Debug logging for all responses
@@ -348,8 +361,22 @@ export default async function handler(req, res) {
       status: data.status,
       message: data.message,
       resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
-      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
+      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A',
+      hasResult: !!data.result
     });
+    
+    // Additional validation for critical endpoints
+    if (type === 'categories' && (!data.result || data.result.length === 0)) {
+      console.warn(`${logPrefix} WARNING: No categories returned after filtering!`);
+    }
+    
+    if (type === 'states' && (!data.result || data.result.length === 0)) {
+      console.warn(`${logPrefix} WARNING: No states returned!`);
+    }
+    
+    if (type === 'districts' && (!data.result || data.result.length === 0)) {
+      console.warn(`${logPrefix} WARNING: No districts returned!`);
+    }
     
     res.status(response.status).json(data);
   } catch (error) {
