@@ -217,9 +217,11 @@ export default async function handler(req, res) {
 
     // Make the request to the external API
     console.log(`${logPrefix} Making request with options:`, requestOptions);
+    console.log(`${logPrefix} Target URL: ${targetUrl}`);
     const response = await fetch(targetUrl, requestOptions);
     
     console.log(`${logPrefix} Response status: ${response.status}`);
+    console.log(`${logPrefix} Response headers:`, Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
       console.error(`${logPrefix} API response not ok: ${response.status} ${response.statusText}`);
@@ -261,6 +263,7 @@ export default async function handler(req, res) {
       const originalLength = data.result.length;
       const originalCategories = [...data.result]; // Keep a copy of original data
       
+      // First try: strict filtering (active and not deleted)
       data.result = data.result.filter(category => {
         const isActive = category.is_active === 1;
         const isNotDeleted = category.is_deleted === 0 || category.is_deleted === null || category.is_deleted === undefined;
@@ -271,16 +274,28 @@ export default async function handler(req, res) {
         return shouldInclude;
       });
       
-      console.log(`${logPrefix} Filtered from ${originalLength} to ${data.result.length} active categories`);
-      console.log(`${logPrefix} Active categories:`, data.result.map(cat => cat.category_name));
+      console.log(`${logPrefix} Strict filtering: ${originalLength} -> ${data.result.length} categories`);
       
-      // If no categories after filtering, return all active categories regardless of deleted status
+      // If no categories after strict filtering, try relaxed filtering (only active)
       if (data.result.length === 0) {
-        console.log(`${logPrefix} No categories after filtering, returning all active categories`);
-        data.result = originalCategories.filter(category => category.is_active === 1);
-        console.log(`${logPrefix} Fallback: ${data.result.length} active categories (ignoring deleted status)`);
-        console.log(`${logPrefix} Fallback categories:`, data.result.map(cat => cat.category_name));
+        console.log(`${logPrefix} No categories after strict filtering, trying relaxed filtering (active only)`);
+        data.result = originalCategories.filter(category => {
+          const isActive = category.is_active === 1;
+          console.log(`${logPrefix} Relaxed: Category "${category.category_name}": active=${category.is_active}, include=${isActive}`);
+          return isActive;
+        });
+        console.log(`${logPrefix} Relaxed filtering: ${originalLength} -> ${data.result.length} categories`);
       }
+      
+      // If still no categories, return all categories (last resort)
+      if (data.result.length === 0) {
+        console.log(`${logPrefix} No categories after relaxed filtering, returning ALL categories as last resort`);
+        data.result = originalCategories;
+        console.log(`${logPrefix} Last resort: ${originalLength} -> ${data.result.length} categories`);
+      }
+      
+      console.log(`${logPrefix} Final result: ${data.result.length} categories`);
+      console.log(`${logPrefix} Final categories:`, data.result.map(cat => cat.category_name));
     }
     
     // Additional validation for critical endpoints
