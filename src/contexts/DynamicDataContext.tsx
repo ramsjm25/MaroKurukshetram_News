@@ -95,7 +95,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshLanguages
   } = useQuery({
     queryKey: ['languages'],
-    queryFn: () => fetchAndCacheData<Language>('/api/news/languages', {}, 'languages'),
+    queryFn: () => fetchAndCacheData<Language>('/news/languages', {}, 'languages'),
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
     gcTime: 24 * 60 * 60 * 1000, // 24 hours
   });
@@ -108,7 +108,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshStates
   } = useQuery({
     queryKey: ['states', selectedLanguage?.id],
-    queryFn: () => fetchAndCacheData<State>('/api/news/states', { language_id: selectedLanguage?.id }, 'states'),
+    queryFn: () => fetchAndCacheData<State>('/news/states', { language_id: selectedLanguage?.id }, 'states'),
     enabled: !!selectedLanguage?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
@@ -122,7 +122,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshDistricts
   } = useQuery({
     queryKey: ['districts', selectedLanguage?.id, selectedState?.id],
-    queryFn: () => fetchAndCacheData<District>('/api/news/districts', { 
+    queryFn: () => fetchAndCacheData<District>('/news/districts', { 
       language_id: selectedLanguage?.id, 
       state_id: selectedState?.id 
     }, 'districts'),
@@ -139,7 +139,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshCategories
   } = useQuery({
     queryKey: ['categories', selectedLanguage?.id],
-    queryFn: () => fetchAndCacheData<Category>('/api/news/categories', { language_id: selectedLanguage?.id }, 'categories'),
+    queryFn: () => fetchAndCacheData<Category>('/news/categories', { language_id: selectedLanguage?.id }, 'categories'),
     enabled: !!selectedLanguage?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
