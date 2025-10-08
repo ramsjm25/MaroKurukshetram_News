@@ -397,7 +397,7 @@ export const apiService = {
   async getLanguages(): Promise<Language[]> {
     try {
       const response = await retryRequest(async () => 
-        await apiClient.get<ApiResponse<Language[]>>('?type=languages')
+        await apiClient.get<ApiResponse<Language[]>>('/news/languages')
       );
       return response.data.result || [];
     } catch (error: any) {
@@ -410,7 +410,7 @@ export const apiService = {
   async getNewsCategories(language_id: string): Promise<NewsCategory[]> {
     try {
       const response = await retryRequest(async () => 
-        await apiClient.get<ApiResponse<NewsCategory[]>>(`?type=categories&language_id=${language_id}`)
+        await apiClient.get<ApiResponse<NewsCategory[]>>(`/news/categories?language_id=${language_id}`)
       );
       console.log(`[getNewsCategories] API response for language ${language_id}:`, response.data);
       const result = response.data.result || [];
@@ -426,7 +426,7 @@ export const apiService = {
   async getStates(language_id: string): Promise<State[]> {
     try {
       const response = await retryRequest(async () =>
-        await apiClient.get<StatesApiResponse>(`?type=states&language_id=${language_id}`)
+        await apiClient.get<StatesApiResponse>(`/news/states?language_id=${language_id}`)
       );
       const result = response.data.result;
       const items = Array.isArray(result) ? result : result?.items || [];
@@ -447,7 +447,7 @@ export const apiService = {
   async getDistricts(language_id: string): Promise<District[]> {
     try {
       const response = await retryRequest(async () => 
-        await apiClient.get<ApiResponse<District[]>>(`?type=districts&language_id=${language_id}`)
+        await apiClient.get<ApiResponse<District[]>>(`/news/districts?language_id=${language_id}`)
       );
       return response.data.result?.filter(district => district.isDeleted !== 1) || [];
     } catch (error: any) {
