@@ -270,30 +270,33 @@ export const fetchAndCacheData = async <T>(
     
     // Fallback to direct external API call
     try {
+      // Map to external API endpoints based on the endpoint path
+      let externalUrl = '';
+      
       // Get API base URL from environment variables
       const apiBaseUrl = (import.meta as any).env?.VITE_API_BASE_URL || 
                         'https://phpstack-1520234-5847937.cloudwaysapps.com/api/v1';
       
-      // Use the apiEndpoint directly as it's already the correct path
-      let externalUrl = `${apiBaseUrl}${apiEndpoint}`;
-      
-      // Add query parameters if any
-      const queryParams = new URLSearchParams();
-      Object.keys(params).forEach(key => {
-        if (params[key] !== undefined && params[key] !== null) {
-          queryParams.append(key, params[key]);
-        }
-      });
-      
-      if (queryParams.toString()) {
-        externalUrl += `?${queryParams.toString()}`;
+      // Determine type from endpoint path
+      if (apiEndpoint.includes('/news/languages')) {
+        externalUrl = `${apiBaseUrl}/news/languages`;
+      } else if (apiEndpoint.includes('/news/categories')) {
+        externalUrl = `${apiBaseUrl}/news/categories?language_id=${params.language_id}`;
+      } else if (apiEndpoint.includes('/news/states')) {
+        externalUrl = `${apiBaseUrl}/news/states?language_id=${params.language_id}`;
+      } else if (apiEndpoint.includes('/news/districts')) {
+        externalUrl = `${apiBaseUrl}/news/districts?language_id=${params.language_id}&state_id=${params.state_id}`;
+      } else {
+        throw new Error(`Unknown endpoint for external API: ${apiEndpoint}`);
       }
       
       console.log(`[DynamicData] Trying direct external API: ${externalUrl}`);
       
       const directResponse = await fetch(externalUrl, {
         method: 'GET',
+
         headers: { 'Content-Type': 'application/json' },
+
       });
 
       

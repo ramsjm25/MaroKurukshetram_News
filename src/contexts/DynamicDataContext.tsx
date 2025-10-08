@@ -1,6 +1,7 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { 
+  fetchAndCacheData, 
   getCategoryIdsByType, 
   Language, 
   State, 
@@ -8,7 +9,6 @@ import {
   Category 
 } from '../utils/dynamicDataUtils';
 import { fetchUrgencyPatterns, fetchCategoryKeywords } from '../services/api';
-import { dynamicApiService, cacheUtils, dataValidation, errorHandling } from '../utils/apiUtils';
 
 interface DynamicDataContextType {
   // Data arrays
@@ -64,16 +64,6 @@ interface DynamicDataContextType {
   refreshCategories: () => void;
   refreshUrgencyPatterns: () => void;
   refreshCategoryKeywords: () => void;
-  
-  // News functions
-  getNewsByCategories: (params: {
-    language_id: string;
-    categoryIds: string;
-    state_id: string;
-    district_id: string;
-    page?: number;
-    limit?: number;
-  }) => Promise<any>;
 }
 
 const DynamicDataContext = createContext<DynamicDataContextType | undefined>(undefined);
@@ -105,31 +95,9 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshLanguages
   } = useQuery({
     queryKey: ['languages'],
-    queryFn: async () => {
-      const cacheKey = 'languages';
-      
-      // Check cache first
-      if (cacheUtils.isCacheValid(cacheKey)) {
-        const cached = cacheUtils.getCachedData(cacheKey);
-        if (cached) {
-          console.log('[DynamicData] Using cached languages');
-          return dataValidation.filterValidData<Language>(cached, dataValidation.validateLanguage);
-        }
-      }
-      
-      // Fetch from API
-      const data = await dynamicApiService.getLanguages();
-      const validData = dataValidation.filterValidData<Language>(data, dataValidation.validateLanguage);
-      
-      // Cache the data
-      cacheUtils.setCachedData(cacheKey, validData);
-      
-      return validData;
-    },
+    queryFn: () => fetchAndCacheData<Language>('/news/languages', {}, 'languages'),
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
     gcTime: 24 * 60 * 60 * 1000, // 24 hours
-    retry: 3,
-    retryDelay: 1000,
   });
 
   // States query - depends on selectedLanguage
@@ -140,34 +108,10 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshStates
   } = useQuery({
     queryKey: ['states', selectedLanguage?.id],
-    queryFn: async () => {
-      if (!selectedLanguage?.id) return [];
-      
-      const cacheKey = `states-${selectedLanguage.id}`;
-      
-      // Check cache first
-      if (cacheUtils.isCacheValid(cacheKey)) {
-        const cached = cacheUtils.getCachedData(cacheKey);
-        if (cached) {
-          console.log('[DynamicData] Using cached states');
-          return dataValidation.filterValidData<State>(cached, dataValidation.validateState);
-        }
-      }
-      
-      // Fetch from API
-      const data = await dynamicApiService.getStates(selectedLanguage.id);
-      const validData = dataValidation.filterValidData<State>(data, dataValidation.validateState);
-      
-      // Cache the data
-      cacheUtils.setCachedData(cacheKey, validData);
-      
-      return validData;
-    },
+    queryFn: () => fetchAndCacheData<State>('/news/states', { language_id: selectedLanguage?.id }, 'states'),
     enabled: !!selectedLanguage?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
-    retry: 3,
-    retryDelay: 1000,
   });
 
   // Districts query - depends on selectedLanguage and selectedState
@@ -178,34 +122,13 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshDistricts
   } = useQuery({
     queryKey: ['districts', selectedLanguage?.id, selectedState?.id],
-    queryFn: async () => {
-      if (!selectedLanguage?.id || !selectedState?.id) return [];
-      
-      const cacheKey = `districts-${selectedLanguage.id}-${selectedState.id}`;
-      
-      // Check cache first
-      if (cacheUtils.isCacheValid(cacheKey)) {
-        const cached = cacheUtils.getCachedData(cacheKey);
-        if (cached) {
-          console.log('[DynamicData] Using cached districts');
-          return dataValidation.filterValidData<District>(cached, dataValidation.validateDistrict);
-        }
-      }
-      
-      // Fetch from API
-      const data = await dynamicApiService.getDistricts(selectedLanguage.id, selectedState.id);
-      const validData = dataValidation.filterValidData<District>(data, dataValidation.validateDistrict);
-      
-      // Cache the data
-      cacheUtils.setCachedData(cacheKey, validData);
-      
-      return validData;
-    },
+    queryFn: () => fetchAndCacheData<District>('/news/districts', { 
+      language_id: selectedLanguage?.id, 
+      state_id: selectedState?.id 
+    }, 'districts'),
     enabled: !!selectedLanguage?.id && !!selectedState?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
-    retry: 3,
-    retryDelay: 1000,
   });
 
   // Categories query - depends on selectedLanguage
@@ -216,34 +139,10 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshCategories
   } = useQuery({
     queryKey: ['categories', selectedLanguage?.id],
-    queryFn: async () => {
-      if (!selectedLanguage?.id) return [];
-      
-      const cacheKey = `categories-${selectedLanguage.id}`;
-      
-      // Check cache first
-      if (cacheUtils.isCacheValid(cacheKey)) {
-        const cached = cacheUtils.getCachedData(cacheKey);
-        if (cached) {
-          console.log('[DynamicData] Using cached categories');
-          return dataValidation.filterValidData<Category>(cached, dataValidation.validateCategory);
-        }
-      }
-      
-      // Fetch from API
-      const data = await dynamicApiService.getCategories(selectedLanguage.id);
-      const validData = dataValidation.filterValidData<Category>(data, dataValidation.validateCategory);
-      
-      // Cache the data
-      cacheUtils.setCachedData(cacheKey, validData);
-      
-      return validData;
-    },
+    queryFn: () => fetchAndCacheData<Category>('/news/categories', { language_id: selectedLanguage?.id }, 'categories'),
     enabled: !!selectedLanguage?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
-    retry: 3,
-    retryDelay: 1000,
   });
 
   // Urgency patterns query - independent of language selection
@@ -504,9 +403,6 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refreshCategories,
     refreshUrgencyPatterns,
     refreshCategoryKeywords,
-    
-    // News functions
-    getNewsByCategories: dynamicApiService.getNewsByCategories,
   };
 
   return (
