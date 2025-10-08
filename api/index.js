@@ -217,10 +217,12 @@ export default async function handler(req, res) {
     // Make the request to the external API
     console.log(`${logPrefix} Making request to external API...`);
     console.log(`${logPrefix} Request URL: ${targetUrl}`);
+    console.log(`${logPrefix} Request options:`, JSON.stringify(requestOptions, null, 2));
     
     const response = await fetch(targetUrl, requestOptions);
     
     console.log(`${logPrefix} External API response status: ${response.status}`);
+    console.log(`${logPrefix} External API response headers:`, Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
       console.error(`${logPrefix} External API error: ${response.status} ${response.statusText}`);
@@ -242,13 +244,27 @@ export default async function handler(req, res) {
       });
     }
     
-    const data = await response.json();
-    console.log(`${logPrefix} External API data received:`, {
-      status: data.status,
-      hasResult: !!data.result,
-      resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
-      resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
-    });
+    let data;
+    try {
+      data = await response.json();
+      console.log(`${logPrefix} External API data received:`, {
+        status: data.status,
+        hasResult: !!data.result,
+        resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
+        resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
+      });
+    } catch (parseError) {
+      console.error(`${logPrefix} Error parsing JSON response:`, parseError);
+      const responseText = await response.text();
+      console.error(`${logPrefix} Raw response:`, responseText);
+      return res.status(500).json({
+        error: 'JSON parse error',
+        message: 'Failed to parse external API response',
+        status: 500,
+        type: 'PARSE_ERROR',
+        details: parseError.message
+      });
+    }
     
     // ULTIMATE FIX: Categories filtering with guaranteed results
     if (type === 'categories' && data.status === 1 && data.result) {
