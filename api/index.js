@@ -1,4 +1,4 @@
-// Comprehensive API handler for all endpoints
+// Simplified and robust API handler for Vercel
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const { method, query, body } = req;
     const { type, action, id, slug } = query;
     
-    console.log(`[API Handler] Request received:`, {
+    console.log(`[API Handler] Request:`, {
       method,
       query,
       type,
@@ -32,7 +32,6 @@ export default async function handler(req, res) {
 
     // Handle different endpoint types
     if (type) {
-      // Data endpoints (languages, categories, states, districts, local-mandis, health-check)
       switch (type) {
         case 'languages':
           targetUrl = `${apiBaseUrl}/news/languages`;
@@ -83,16 +82,12 @@ export default async function handler(req, res) {
           logPrefix = '[Local Mandis API]';
           break;
         case 'urgency-patterns':
-          // Return empty urgency patterns to prevent breaking the system
-          console.log(`${logPrefix} Returning empty urgency patterns`);
           return res.status(200).json({
             status: 1,
             message: 'Urgency patterns not available, using fallback',
             result: {}
           });
         case 'category-keywords':
-          // Return empty category keywords to prevent breaking the system
-          console.log(`${logPrefix} Returning empty category keywords`);
           return res.status(200).json({
             status: 1,
             message: 'Category keywords not available, using fallback',
@@ -164,7 +159,7 @@ export default async function handler(req, res) {
       targetUrl = `${apiBaseUrl}/${path}`;
       logPrefix = '[Dynamic API]';
     } else {
-      // Handle direct path routing (e.g., /api/news/filter-advanced, /api/auth/userLogin)
+      // Handle direct path routing
       const url = new URL(req.url, `http://${req.headers.host}`);
       const pathname = url.pathname.replace('/api', '');
       
@@ -192,8 +187,7 @@ export default async function handler(req, res) {
       targetUrl += `?${queryParams.toString()}`;
     }
 
-    console.log(`${logPrefix} Proxying request to: ${targetUrl}`);
-    console.log(`${logPrefix} Method: ${method}`);
+    console.log(`${logPrefix} Target URL: ${targetUrl}`);
 
     // Prepare request options
     const requestOptions = {
@@ -216,15 +210,13 @@ export default async function handler(req, res) {
     }
 
     // Make the request to the external API
-    console.log(`${logPrefix} Making request with options:`, requestOptions);
-    console.log(`${logPrefix} Target URL: ${targetUrl}`);
+    console.log(`${logPrefix} Making request to external API...`);
     const response = await fetch(targetUrl, requestOptions);
     
-    console.log(`${logPrefix} Response status: ${response.status}`);
-    console.log(`${logPrefix} Response headers:`, Object.fromEntries(response.headers.entries()));
+    console.log(`${logPrefix} External API response status: ${response.status}`);
     
     if (!response.ok) {
-      console.error(`${logPrefix} API response not ok: ${response.status} ${response.statusText}`);
+      console.error(`${logPrefix} External API error: ${response.status} ${response.statusText}`);
       const errorText = await response.text();
       
       let errorData;
@@ -235,72 +227,75 @@ export default async function handler(req, res) {
       }
       
       return res.status(response.status).json({
-        error: 'API request failed',
-        message: errorData.message || `API returned ${response.status}: ${response.statusText}`,
+        error: 'External API request failed',
+        message: errorData.message || `External API returned ${response.status}: ${response.statusText}`,
         status: response.status,
-        type: 'API_ERROR',
+        type: 'EXTERNAL_API_ERROR',
         details: errorData
       });
     }
     
     const data = await response.json();
-    console.log(`${logPrefix} Response data received:`, {
+    console.log(`${logPrefix} External API data received:`, {
       status: data.status,
       hasResult: !!data.result,
       resultType: Array.isArray(data.result) ? 'array' : typeof data.result,
       resultLength: Array.isArray(data.result) ? data.result.length : 'N/A'
     });
     
-    // Apply specific filtering for categories
+    // Apply specific filtering for categories with comprehensive fallback
     if (type === 'categories' && data.status === 1 && data.result) {
-      console.log(`${logPrefix} Raw categories before filtering:`, data.result.length);
+      console.log(`${logPrefix} Processing categories: ${data.result.length} total`);
+      
+      const originalLength = data.result.length;
+      const originalCategories = [...data.result];
+      
+      // Log sample categories for debugging
       console.log(`${logPrefix} Sample categories:`, data.result.slice(0, 3).map(cat => ({
         name: cat.category_name,
         active: cat.is_active,
         deleted: cat.is_deleted
       })));
       
-      const originalLength = data.result.length;
-      const originalCategories = [...data.result]; // Keep a copy of original data
-      
-      // First try: strict filtering (active and not deleted)
-      data.result = data.result.filter(category => {
+      // Tier 1: Strict filtering (active and not deleted)
+      let filteredCategories = data.result.filter(category => {
         const isActive = category.is_active === 1;
         const isNotDeleted = category.is_deleted === 0 || category.is_deleted === null || category.is_deleted === undefined;
         const shouldInclude = isActive && isNotDeleted;
         
-        console.log(`${logPrefix} Category "${category.category_name}": active=${category.is_active}, deleted=${category.is_deleted}, include=${shouldInclude}`);
-        
+        console.log(`${logPrefix} Strict: "${category.category_name}" - active:${category.is_active}, deleted:${category.is_deleted}, include:${shouldInclude}`);
         return shouldInclude;
       });
       
-      console.log(`${logPrefix} Strict filtering: ${originalLength} -> ${data.result.length} categories`);
+      console.log(`${logPrefix} Tier 1 (strict): ${originalLength} -> ${filteredCategories.length} categories`);
       
-      // If no categories after strict filtering, try relaxed filtering (only active)
-      if (data.result.length === 0) {
-        console.log(`${logPrefix} No categories after strict filtering, trying relaxed filtering (active only)`);
-        data.result = originalCategories.filter(category => {
+      // Tier 2: Relaxed filtering (only active, ignore deleted status)
+      if (filteredCategories.length === 0) {
+        console.log(`${logPrefix} No categories after strict filtering, trying relaxed filtering...`);
+        filteredCategories = originalCategories.filter(category => {
           const isActive = category.is_active === 1;
-          console.log(`${logPrefix} Relaxed: Category "${category.category_name}": active=${category.is_active}, include=${isActive}`);
+          console.log(`${logPrefix} Relaxed: "${category.category_name}" - active:${category.is_active}, include:${isActive}`);
           return isActive;
         });
-        console.log(`${logPrefix} Relaxed filtering: ${originalLength} -> ${data.result.length} categories`);
+        console.log(`${logPrefix} Tier 2 (relaxed): ${originalLength} -> ${filteredCategories.length} categories`);
       }
       
-      // If still no categories, return all categories (last resort)
-      if (data.result.length === 0) {
-        console.log(`${logPrefix} No categories after relaxed filtering, returning ALL categories as last resort`);
-        data.result = originalCategories;
-        console.log(`${logPrefix} Last resort: ${originalLength} -> ${data.result.length} categories`);
+      // Tier 3: Last resort (return all categories)
+      if (filteredCategories.length === 0) {
+        console.log(`${logPrefix} No categories after relaxed filtering, using last resort (all categories)...`);
+        filteredCategories = originalCategories;
+        console.log(`${logPrefix} Tier 3 (last resort): ${originalLength} -> ${filteredCategories.length} categories`);
       }
       
-      console.log(`${logPrefix} Final result: ${data.result.length} categories`);
-      console.log(`${logPrefix} Final categories:`, data.result.map(cat => cat.category_name));
+      // Update the result
+      data.result = filteredCategories;
+      
+      console.log(`${logPrefix} Final categories (${data.result.length}):`, data.result.map(cat => cat.category_name));
     }
     
-    // Additional validation for critical endpoints
+    // Additional validation and logging
     if (type === 'categories' && (!data.result || data.result.length === 0)) {
-      console.warn(`${logPrefix} WARNING: No categories returned after filtering!`);
+      console.warn(`${logPrefix} WARNING: No categories returned after all filtering attempts!`);
     }
     
     if (type === 'states' && (!data.result || data.result.length === 0)) {
@@ -321,12 +316,12 @@ export default async function handler(req, res) {
     
     res.status(response.status).json(data);
   } catch (error) {
-    console.error('[API] Error:', error);
+    console.error('[API Handler] Error:', error);
     res.status(500).json({ 
       error: 'Internal server error',
       message: error.message,
       status: 500,
-      type: 'PROXY_ERROR'
+      type: 'HANDLER_ERROR'
     });
   }
 }
