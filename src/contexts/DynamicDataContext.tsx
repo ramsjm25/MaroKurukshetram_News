@@ -95,7 +95,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshLanguages
   } = useQuery({
     queryKey: ['languages'],
-    queryFn: () => fetchAndCacheData<Language>('/api', { type: 'languages' }, 'languages'),
+    queryFn: () => fetchAndCacheData<Language>('/api/news/languages', {}, 'languages'),
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
     gcTime: 24 * 60 * 60 * 1000, // 24 hours
   });
@@ -108,7 +108,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshStates
   } = useQuery({
     queryKey: ['states', selectedLanguage?.id],
-    queryFn: () => fetchAndCacheData<State>('/api', { type: 'states', language_id: selectedLanguage?.id }, 'states'),
+    queryFn: () => fetchAndCacheData<State>('/api/news/states', { language_id: selectedLanguage?.id }, 'states'),
     enabled: !!selectedLanguage?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
@@ -122,8 +122,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshDistricts
   } = useQuery({
     queryKey: ['districts', selectedLanguage?.id, selectedState?.id],
-    queryFn: () => fetchAndCacheData<District>('/api', { 
-      type: 'districts', 
+    queryFn: () => fetchAndCacheData<District>('/api/news/districts', { 
       language_id: selectedLanguage?.id, 
       state_id: selectedState?.id 
     }, 'districts'),
@@ -140,7 +139,7 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     refetch: refreshCategories
   } = useQuery({
     queryKey: ['categories', selectedLanguage?.id],
-    queryFn: () => fetchAndCacheData<Category>('/api', { type: 'categories', language_id: selectedLanguage?.id }, 'categories'),
+    queryFn: () => fetchAndCacheData<Category>('/api/news/categories', { language_id: selectedLanguage?.id }, 'categories'),
     enabled: !!selectedLanguage?.id,
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
@@ -261,12 +260,8 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   React.useEffect(() => {
     if (languages.length > 0 && !selectedLanguage) {
       console.log('[DynamicData] Available languages:', languages.map(l => l.language_name));
-      // Try to find English first, fallback to first available
-      const defaultLang = languages.find(lang => 
-        lang.language_name.toLowerCase().includes('english') || 
-        lang.language_code.toLowerCase() === 'en' ||
-        lang.language_name.toLowerCase() === 'english'
-      ) || languages[0];
+      // Select first available language (no hardcoded preferences)
+      const defaultLang = languages[0];
       
       if (defaultLang) {
         setSelectedLanguage(defaultLang);
@@ -279,11 +274,8 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   React.useEffect(() => {
     if (states.length > 0 && !selectedState && selectedLanguage) {
       console.log('[DynamicData] Available states:', states.map(s => s.state_name));
-      // Try to find Telangana first, fallback to first available
-      const defaultState = states.find(state => 
-        state.state_name.toLowerCase().includes('telangana') ||
-        state.state_name.toLowerCase() === 'telangana'
-      ) || states[0];
+      // Select first available state (no hardcoded preferences)
+      const defaultState = states[0];
       
       if (defaultState) {
         setSelectedState(defaultState);
@@ -296,11 +288,8 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   React.useEffect(() => {
     if (districts.length > 0 && !selectedDistrict && selectedState) {
       console.log('[DynamicData] Available districts:', districts.map(d => d.name));
-      // Try to find Hyderabad first, fallback to first available
-      const defaultDistrict = districts.find(district => 
-        district.name.toLowerCase().includes('hyderabad') ||
-        district.name.toLowerCase() === 'hyderabad'
-      ) || districts[0];
+      // Select first available district (no hardcoded preferences)
+      const defaultDistrict = districts[0];
       
       if (defaultDistrict) {
         setSelectedDistrict(defaultDistrict);

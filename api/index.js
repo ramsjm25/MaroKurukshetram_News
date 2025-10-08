@@ -305,76 +305,9 @@ export default async function handler(req, res) {
         console.log(`${logPrefix} Final categories result: ${data.result.length} categories`);
         console.log(`${logPrefix} Final category names:`, data.result.map(cat => cat.category_name));
         
-        // Only use hardcoded fallback for English language if no categories found
-        if (data.result.length === 0 && query.language_id === '5dd95034-d533-4b09-8687-cd2ed3682ab6') {
-          console.log(`${logPrefix} No active categories found for English, using hardcoded fallback`);
-          data.result = [
-            {
-              id: "8f8d4645-fe69-449f-8cc9-7b86f739d62b",
-              category_name: "Breaking News",
-              language_id: query.language_id,
-              slug: "breaking-news",
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:25:33.000Z",
-              updated_at: "2025-09-25T06:25:33.000Z"
-            },
-            {
-              id: "40c4b7ab-c38a-4cdc-9d97-6db86ec6d598", 
-              category_name: "Politics",
-              language_id: query.language_id,
-              slug: "politics",
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:38:44.000Z",
-              updated_at: "2025-09-25T06:38:44.000Z"
-            },
-            {
-              id: "afbe031c-6b2f-40fc-8feb-6e3b2a6c0fc8",
-              category_name: "Business",
-              language_id: query.language_id,
-              slug: "business",
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:39:26.000Z",
-              updated_at: "2025-09-25T06:39:26.000Z"
-            },
-            {
-              id: "a553d9b4-42ea-42e0-806f-8c69f703981a",
-              category_name: "Technology",
-              language_id: query.language_id,
-              slug: "technology",
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:40:19.000Z",
-              updated_at: "2025-09-25T06:40:19.000Z"
-            },
-            {
-              id: "ebb9fd74-e14f-4908-a58f-57a3e745c042",
-              category_name: "Sports",
-              language_id: query.language_id,
-              slug: "sports",
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:37:27.000Z",
-              updated_at: "2025-09-25T06:37:27.000Z"
-            },
-            {
-              id: "9c1b079f-4acc-4d84-99f7-4f54693fa8c9",
-              category_name: "Entertainment",
-              language_id: query.language_id,
-              slug: "entertainment",
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:37:47.000Z",
-              updated_at: "2025-09-25T06:37:47.000Z"
-            }
-          ];
-          console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} categories`);
-        } else if (data.result.length === 0) {
+        // No hardcoded fallbacks - return only data from external API
+        if (data.result.length === 0) {
           console.log(`${logPrefix} No active categories found for language ${query.language_id}, returning empty array`);
-          // For non-English languages, return empty array if no categories found
-          // This allows the frontend to handle the case appropriately
         }
       }
       
@@ -382,25 +315,9 @@ export default async function handler(req, res) {
       if (type === 'states' && data.status === 1 && data.result) {
         console.log(`${logPrefix} Processing states: ${data.result.length} total from external API`);
         
-        // If no states returned, provide fallback only for English
-        if (data.result.length === 0 && query.language_id === '5dd95034-d533-4b09-8687-cd2ed3682ab6') {
-          console.log(`${logPrefix} No states found for English, using hardcoded fallback`);
-          data.result = [
-            {
-              id: "b6be8d5c-f276-4d63-b878-6fc765180ccf",
-              state_name: "Telangana",
-              state_code: "TG",
-              language_id: query.language_id,
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:26:16.188Z",
-              updated_at: "2025-09-25T06:26:16.188Z"
-            }
-          ];
-          console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} states`);
-        } else if (data.result.length === 0) {
+        // No hardcoded fallbacks - return only data from external API
+        if (data.result.length === 0) {
           console.log(`${logPrefix} No states found for language ${query.language_id}, returning empty array`);
-          // For non-English languages, return empty array if no states found
         } else {
           console.log(`${logPrefix} Using external API states: ${data.result.length} states`);
           console.log(`${logPrefix} State names:`, data.result.map(state => state.state_name));
@@ -411,25 +328,9 @@ export default async function handler(req, res) {
       if (type === 'districts' && data.status === 1 && data.result) {
         console.log(`${logPrefix} Processing districts: ${data.result.length} total from external API`);
         
-        // If no districts returned, provide fallback only for English
-        if (data.result.length === 0 && query.language_id === '5dd95034-d533-4b09-8687-cd2ed3682ab6') {
-          console.log(`${logPrefix} No districts found for English, using hardcoded fallback`);
-          data.result = [
-            {
-              id: "hyderabad-district-id",
-              name: "Hyderabad",
-              state_id: query.state_id,
-              language_id: query.language_id,
-              is_active: 1,
-              is_deleted: 0,
-              created_at: "2025-09-25T06:26:16.188Z",
-              updated_at: "2025-09-25T06:26:16.188Z"
-            }
-          ];
-          console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} districts`);
-        } else if (data.result.length === 0) {
+        // No hardcoded fallbacks - return only data from external API
+        if (data.result.length === 0) {
           console.log(`${logPrefix} No districts found for language ${query.language_id}, returning empty array`);
-          // For non-English languages, return empty array if no districts found
         } else {
           console.log(`${logPrefix} Using external API districts: ${data.result.length} districts`);
           console.log(`${logPrefix} District names:`, data.result.map(district => district.name));
