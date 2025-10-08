@@ -338,7 +338,7 @@ export default async function handler(req, res) {
     if (type === 'categories' && data.status === 1 && data.result) {
       console.log(`${logPrefix} Raw categories before filtering:`, data.result.length);
       data.result = data.result.filter(category => 
-        category.is_active === 1 && category.is_deleted === 0
+        category.is_active === 1 && (category.is_deleted === 0 || category.is_deleted === null)
       );
       console.log(`${logPrefix} Filtered to ${data.result.length} active categories`);
     }
