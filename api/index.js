@@ -216,9 +216,13 @@ export default async function handler(req, res) {
 
     // Make the request to the external API
     console.log(`${logPrefix} Making request to external API...`);
+    console.log(`${logPrefix} Request URL: ${targetUrl}`);
+    console.log(`${logPrefix} Request options:`, JSON.stringify(requestOptions, null, 2));
+    
     const response = await fetch(targetUrl, requestOptions);
     
     console.log(`${logPrefix} External API response status: ${response.status}`);
+    console.log(`${logPrefix} External API response headers:`, Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
       console.error(`${logPrefix} External API error: ${response.status} ${response.statusText}`);
@@ -352,6 +356,13 @@ export default async function handler(req, res) {
     
     if (type === 'states' && (!data.result || data.result.length === 0)) {
       console.warn(`${logPrefix} WARNING: No states returned!`);
+      console.warn(`${logPrefix} States API Debug:`, {
+        targetUrl,
+        responseStatus: response.status,
+        dataStatus: data.status,
+        hasResult: !!data.result,
+        resultLength: data.result?.length || 0
+      });
     }
     
     if (type === 'districts' && (!data.result || data.result.length === 0)) {
