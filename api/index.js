@@ -166,6 +166,11 @@ export default async function handler(req, res) {
       if (pathname.startsWith('/news/') || pathname.startsWith('/auth/') || pathname.startsWith('/local-mandi-categories') || pathname.startsWith('/e-newspapers') || pathname.startsWith('/local-mandis')) {
         targetUrl = `${apiBaseUrl}${pathname}`;
         logPrefix = '[Direct API]';
+        
+        // Special handling for news filtering with fallback category IDs
+        if (pathname.startsWith('/news/filter-multi-categories')) {
+          logPrefix = '[News Filter API]';
+        }
       } else {
         return res.status(400).json({ 
           status: 0, 
@@ -276,52 +281,64 @@ export default async function handler(req, res) {
         console.log(`${logPrefix} No active categories found, using hardcoded fallback`);
         data.result = [
           {
-            id: "fallback-1",
+            id: "8f8d4645-fe69-449f-8cc9-7b86f739d62b",
             category_name: "Breaking News",
             language_id: query.language_id,
             slug: "breaking-news",
             is_active: 1,
-            is_deleted: 0
+            is_deleted: 0,
+            created_at: "2025-09-25T06:25:33.000Z",
+            updated_at: "2025-09-25T06:25:33.000Z"
           },
           {
-            id: "fallback-2", 
+            id: "40c4b7ab-c38a-4cdc-9d97-6db86ec6d598", 
             category_name: "Politics",
             language_id: query.language_id,
             slug: "politics",
             is_active: 1,
-            is_deleted: 0
+            is_deleted: 0,
+            created_at: "2025-09-25T06:38:44.000Z",
+            updated_at: "2025-09-25T06:38:44.000Z"
           },
           {
-            id: "fallback-3",
+            id: "afbe031c-6b2f-40fc-8feb-6e3b2a6c0fc8",
             category_name: "Business",
             language_id: query.language_id,
             slug: "business",
             is_active: 1,
-            is_deleted: 0
+            is_deleted: 0,
+            created_at: "2025-09-25T06:39:26.000Z",
+            updated_at: "2025-09-25T06:39:26.000Z"
           },
           {
-            id: "fallback-4",
+            id: "a553d9b4-42ea-42e0-806f-8c69f703981a",
             category_name: "Technology",
             language_id: query.language_id,
             slug: "technology",
             is_active: 1,
-            is_deleted: 0
+            is_deleted: 0,
+            created_at: "2025-09-25T06:40:19.000Z",
+            updated_at: "2025-09-25T06:40:19.000Z"
           },
           {
-            id: "fallback-5",
+            id: "ebb9fd74-e14f-4908-a58f-57a3e745c042",
             category_name: "Sports",
             language_id: query.language_id,
             slug: "sports",
             is_active: 1,
-            is_deleted: 0
+            is_deleted: 0,
+            created_at: "2025-09-25T06:37:27.000Z",
+            updated_at: "2025-09-25T06:37:27.000Z"
           },
           {
-            id: "fallback-6",
+            id: "9c1b079f-4acc-4d84-99f7-4f54693fa8c9",
             category_name: "Entertainment",
             language_id: query.language_id,
             slug: "entertainment",
             is_active: 1,
-            is_deleted: 0
+            is_deleted: 0,
+            created_at: "2025-09-25T06:37:47.000Z",
+            updated_at: "2025-09-25T06:37:47.000Z"
           }
         ];
         console.log(`${logPrefix} Hardcoded fallback: ${data.result.length} categories`);
@@ -339,6 +356,18 @@ export default async function handler(req, res) {
     
     if (type === 'districts' && (!data.result || data.result.length === 0)) {
       console.warn(`${logPrefix} WARNING: No districts returned!`);
+    }
+    
+    // Special handling for news filtering API
+    if (logPrefix === '[News Filter API]' && data.status === 1 && data.result) {
+      console.log(`${logPrefix} Processing news filter results: ${data.result.length} items`);
+      
+      // If no news found, return empty array (don't modify the response)
+      if (data.result.length === 0) {
+        console.log(`${logPrefix} No news found for the given category IDs`);
+      } else {
+        console.log(`${logPrefix} Found ${data.result.length} news items`);
+      }
     }
     
     console.log(`${logPrefix} Final response:`, {
