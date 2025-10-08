@@ -249,6 +249,7 @@ export interface NewsItem {
   viewCount: any;
   id: string;
   title: string;
+  slug: string;
   excerpt?: string | null;
   publishedAt: string;
   authorId: string;
@@ -258,6 +259,12 @@ export interface NewsItem {
   content?: string | null;
   shortNewsContent?: string | null;
   authorName?: string;
+  categoryName?: string;
+  stateName?: string;
+  districtName?: string;
+  languageName?: string;
+  language_id?: string;
+  state_id?: string;
 }
 
 export interface NewsResponse {
@@ -430,4 +437,22 @@ export interface GetENewspapersParams {
   dateFrom: string;
   dateTo: string;
   type?: string;
+}
+
+// Role Types
+export interface Role {
+  id: string;
+  role: string;
+  role_type: string;
+  isApproved: boolean;
+  createdAt: string;
+  updatedAt: string;
+  is_active: boolean;
+  description?: string;
+}
+
+export interface RoleResponse {
+  status: number;
+  message: string;
+  result: Role[];
 }

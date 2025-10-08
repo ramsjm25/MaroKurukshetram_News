@@ -82,11 +82,16 @@ After deployment, test the API connectivity:
    # Test languages
    curl "https://your-domain.vercel.app/api?type=languages"
    
-   # Test categories
-   curl "https://your-domain.vercel.app/api?type=categories&language_id=5dd95034-d533-4b09-8687-cd2ed3682ab6"
+   # Test roles
+   curl "https://your-domain.vercel.app/api?type=roles"
    
-   # Test e-newspapers
-   curl "https://your-domain.vercel.app/api/e-newspapers?language_id=5dd95034-d533-4b09-8687-cd2ed3682ab6"
+   # Test local mandi categories
+   curl "https://your-domain.vercel.app/api/local-mandi-categories"
+   
+   # Test language-dependent endpoints (replace LANGUAGE_ID with actual ID from languages response)
+   curl "https://your-domain.vercel.app/api?type=categories&language_id=LANGUAGE_ID"
+   curl "https://your-domain.vercel.app/api?type=states&language_id=LANGUAGE_ID"
+   curl "https://your-domain.vercel.app/api/e-newspapers?language_id=LANGUAGE_ID"
    ```
 
 4. **Check Vercel Function Logs**:

@@ -54,6 +54,9 @@ interface DynamicDataContextType {
   getCurrentCategoryIds: () => string[];
   getCategoryIdsByType: (type: string) => string[];
   
+  // Reset function
+  resetToDefaults: () => void;
+  
   // Refresh functions
   refreshLanguages: () => void;
   refreshStates: () => void;
@@ -261,7 +264,8 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
       // Try to find English first, fallback to first available
       const defaultLang = languages.find(lang => 
         lang.language_name.toLowerCase().includes('english') || 
-        lang.language_code.toLowerCase() === 'en'
+        lang.language_code.toLowerCase() === 'en' ||
+        lang.language_name.toLowerCase() === 'english'
       ) || languages[0];
       
       if (defaultLang) {
@@ -271,13 +275,14 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     }
   }, [languages, selectedLanguage]);
 
-  // Initialize with default state (Telangana) when language is selected
+  // Initialize with default state when language is selected
   React.useEffect(() => {
     if (states.length > 0 && !selectedState && selectedLanguage) {
       console.log('[DynamicData] Available states:', states.map(s => s.state_name));
+      // Try to find Telangana first, fallback to first available
       const defaultState = states.find(state => 
-        state.state_name.toLowerCase().includes('telangana') || 
-        state.state_name.toLowerCase().includes('telangana')
+        state.state_name.toLowerCase().includes('telangana') ||
+        state.state_name.toLowerCase() === 'telangana'
       ) || states[0];
       
       if (defaultState) {
@@ -287,13 +292,14 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     }
   }, [states, selectedLanguage, selectedState]);
 
-  // Initialize with default district (Hyderabad) when state is selected
+  // Initialize with default district when state is selected
   React.useEffect(() => {
     if (districts.length > 0 && !selectedDistrict && selectedState) {
       console.log('[DynamicData] Available districts:', districts.map(d => d.name));
+      // Try to find Hyderabad first, fallback to first available
       const defaultDistrict = districts.find(district => 
-        district.name.toLowerCase().includes('hyderabad') || 
-        district.name.toLowerCase().includes('hyderabad')
+        district.name.toLowerCase().includes('hyderabad') ||
+        district.name.toLowerCase() === 'hyderabad'
       ) || districts[0];
       
       if (defaultDistrict) {
@@ -334,6 +340,24 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
   const getCurrentDistrictId = () => selectedDistrict?.id || null;
   const getCurrentCategoryIds = () => selectedCategories.map(cat => cat.id);
   const getCategoryIdsByTypeHelper = (type: string) => getCategoryIdsByType(categories, type, urgencyPatterns, categoryKeywords, selectedLanguage?.id, languages);
+  
+  // Reset to defaults function
+  const resetToDefaults = () => {
+    console.log('[DynamicData] Resetting to defaults...');
+    // Clear session storage
+    sessionStorage.removeItem('selectedLanguage');
+    sessionStorage.removeItem('selectedState');
+    sessionStorage.removeItem('selectedDistrict');
+    sessionStorage.removeItem('selectedCategories');
+    
+    // Reset state
+    setSelectedLanguage(null);
+    setSelectedState(null);
+    setSelectedDistrict(null);
+    setSelectedCategories([]);
+    
+    console.log('[DynamicData] Reset to defaults completed');
+  };
 
   // Context value
   const contextValue: DynamicDataContextType = {
@@ -379,6 +403,9 @@ export const DynamicDataProvider: React.FC<DynamicDataProviderProps> = ({ childr
     getCurrentDistrictId,
     getCurrentCategoryIds,
     getCategoryIdsByType: getCategoryIdsByTypeHelper,
+    
+    // Reset function
+    resetToDefaults,
     
     // Refresh functions
     refreshLanguages,

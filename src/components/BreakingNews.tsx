@@ -3,25 +3,14 @@ import Slider, { CustomArrowProps } from "react-slick";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useDynamicData } from '../contexts/DynamicDataContext';
-import { fetchNewsByCategory, getImageUrl } from '@/services/api';
+import { getImageUrl } from '@/services/api';
+import { fetchBreakingNews as fetchBreakingNewsUtil } from '@/utils/newsUtils';
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 // -------- Types --------
-interface NewsItem {
-  id: string;
-  title: string;
-  slug: string;
-  shortNewsContent?: string;
-  categoryName?: string;
-  media?: {
-    id: string;
-    mediaUrl: string;
-    altText?: string;
-    caption?: string;
-  }[];
-}
+import { NewsItem } from '../api/apiTypes';
 
 // -------- Custom Arrows --------
 const PrevArrow: React.FC<CustomArrowProps> = ({ onClick }) => {
@@ -76,7 +65,7 @@ const BreakingNews: React.FC = () => {
   const language_id = getCurrentLanguageId();
 
   const fetchBreakingNews = async () => {
-    if (!language_id || !categories.length) {
+    if (!language_id) {
       console.log('[BreakingNews] Missing required data:', { language_id, categoriesLength: categories.length });
       return;
     }
@@ -85,39 +74,17 @@ const BreakingNews: React.FC = () => {
     setError(null);
 
     try {
-      // Get breaking news category IDs dynamically using the context function
-      const breakingCategoryIds = getCategoryIdsByType('breaking');
+      console.log('[BreakingNews] Fetching breaking news for language:', language_id);
 
-      if (!breakingCategoryIds || breakingCategoryIds.length === 0) {
-        console.log('[BreakingNews] No breaking news categories found for language:', language_id);
-        setBreakingNews([]);
-        setError(`No breaking news categories available for ${selectedLanguage?.language_name || 'selected language'}`);
-        return;
-      }
-
-      console.log('[BreakingNews] Found breaking news categories:', breakingCategoryIds);
-
-      // Fetch news for all breaking news categories
-      const allNews = [];
-      for (const categoryId of breakingCategoryIds) {
-        try {
-          const news = await fetchNewsByCategory(language_id, categoryId, 6, 1);
-          if (news && news.length > 0) {
-            allNews.push(...news);
-            console.log(`[BreakingNews] Fetched ${news.length} news items for category ${categoryId}`);
-          }
-        } catch (categoryError) {
-          console.error(`[BreakingNews] Error fetching news for category ${categoryId}:`, categoryError);
-          // Continue with other categories even if one fails
-        }
-      }
+      // Use the new dynamic utility function
+      const news = await fetchBreakingNewsUtil(language_id, 6);
       
-      if (allNews.length > 0) {
-        setBreakingNews(allNews.slice(0, 6)); // Take only first 6 items
-        console.log('[BreakingNews] Successfully fetched breaking news:', allNews.length, 'items');
+      if (news && news.length > 0) {
+        setBreakingNews(news);
+        console.log('[BreakingNews] Successfully fetched breaking news:', news.length, 'items');
         setError(null);
       } else {
-        console.log('[BreakingNews] No news items found for any breaking news categories');
+        console.log('[BreakingNews] No breaking news items found');
         setBreakingNews([]);
         setError('No breaking news available');
       }
@@ -132,7 +99,7 @@ const BreakingNews: React.FC = () => {
 
   useEffect(() => {
     fetchBreakingNews();
-  }, [language_id, categories]);
+  }, [language_id]);
 
   // 👉 Navigate on card click
   const handleCardClick = (newsId: string) => {

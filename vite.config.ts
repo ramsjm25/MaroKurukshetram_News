@@ -13,7 +13,31 @@ export default defineConfig(({ mode }) => ({
         target: process.env.API_BASE_URL || process.env.VITE_PROXY_TARGET || "https://phpstack-1520234-5847937.cloudwaysapps.com/api/v1",
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => {
+          // Handle different API patterns
+          if (path.includes('?type=')) {
+            // For type-based calls like /api?type=categories, rewrite to /news/categories
+            const url = new URL(path, 'http://localhost');
+          const type = url.searchParams.get('type');
+          if (type === 'categories') {
+            return `/news/categories${url.search}`;
+          } else if (type === 'languages') {
+            return `/news/languages`;
+          } else if (type === 'states') {
+            return `/news/states${url.search}`;
+          } else if (type === 'districts') {
+            return `/news/districts${url.search}`;
+          } else if (type === 'roles') {
+            return `/roles`;
+          } else if (type === 'urgency-patterns') {
+            return `/news/urgency-patterns`;
+          } else if (type === 'category-keywords') {
+            return `/news/category-keywords`;
+          }
+          }
+          // For other API calls, remove /api prefix
+          return path.replace(/^\/api/, "");
+        },
       },
     },
   },

@@ -158,6 +158,10 @@ export default async function handler(req, res) {
             });
           }
 
+        case 'roles':
+          targetUrl = `${apiBaseUrl}/roles`;
+          logPrefix = '[Roles API]';
+          break;
         case 'health-check':
           // Health check functionality
           const testUrl = `${apiBaseUrl}/news/test-connection`;
@@ -198,7 +202,7 @@ export default async function handler(req, res) {
         default:
           return res.status(400).json({ 
             status: 0, 
-            message: 'Invalid type. Must be one of: languages, categories, states, districts, local-mandis, health-check',
+            message: 'Invalid type. Must be one of: languages, categories, states, districts, local-mandis, roles, health-check',
             result: null 
           });
       }

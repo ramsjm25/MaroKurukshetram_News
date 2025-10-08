@@ -3,24 +3,12 @@ import { Clock, User, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { fetchNewsByCategory, getImageUrl } from '@/services/api';
+import { getImageUrl } from '@/services/api';
+import { fetchTechnologyNews as fetchTechnologyNewsUtil, fetchEntertainmentNews as fetchEntertainmentNewsUtil } from '@/utils/newsUtils';
 import { formatTimeAgo } from "@/utils/timeUtils";
 import { useDynamicData } from '../contexts/DynamicDataContext';
 
-interface NewsItem {
-  id: string;
-  title: string;
-  shortNewsContent?: string;
-  excerpt?: string;
-  categoryName?: string;
-  authorName?: string;
-  createdAt: string;
-  districtName?: string;
-  media?: Array<{
-    mediaUrl: string;
-    mediaType: string;
-  }>;
-}
+import { NewsItem } from '../api/apiTypes';
 
 interface NewsResponse {
   status: number;
@@ -54,7 +42,7 @@ const TechAndEntertainmentNews: React.FC = () => {
   const language_id = getCurrentLanguageId();
 
   const fetchNews = async () => {
-    if (!language_id || !categories.length) {
+    if (!language_id) {
       console.log('[TechAndEntertainment] Missing required data:', { language_id, categoriesLength: categories.length });
       return;
     }
@@ -63,59 +51,24 @@ const TechAndEntertainmentNews: React.FC = () => {
     setError(null);
 
     try {
-      // Get technology and entertainment category IDs dynamically using the context function
-      const technologyCategoryIds = getCategoryIdsByType('technology');
-      const entertainmentCategoryIds = getCategoryIdsByType('entertainment');
+      console.log('[TechAndEntertainment] Fetching technology and entertainment news for language:', language_id);
 
-      // Fetch technology news
-      if (technologyCategoryIds && technologyCategoryIds.length > 0) {
-        console.log('[TechAndEntertainment] Found technology categories:', technologyCategoryIds);
-        const allTechNews = [];
-        for (const categoryId of technologyCategoryIds) {
-          try {
-            const techNews = await fetchNewsByCategory(language_id, categoryId, 6, 1);
-            if (techNews && techNews.length > 0) {
-              allTechNews.push(...techNews);
-              console.log(`[TechAndEntertainment] Fetched ${techNews.length} tech news items for category ${categoryId}`);
-            }
-          } catch (categoryError) {
-            console.error(`[TechAndEntertainment] Error fetching tech news for category ${categoryId}:`, categoryError);
-            // Continue with other categories even if one fails
-          }
-        }
-        setTechnologyNews(allTechNews.slice(0, 6));
-        console.log('[TechAndEntertainment] Successfully fetched technology news:', allTechNews.length, 'items');
-      } else {
-        console.log('[TechAndEntertainment] No technology categories found for language:', language_id);
-        setTechnologyNews([]);
-      }
+      // Use the new dynamic utility functions
+      const [techNews, entNews] = await Promise.all([
+        fetchTechnologyNewsUtil(language_id, 6),
+        fetchEntertainmentNewsUtil(language_id, 3)
+      ]);
 
-      // Fetch entertainment news
-      if (entertainmentCategoryIds && entertainmentCategoryIds.length > 0) {
-        console.log('[TechAndEntertainment] Found entertainment categories:', entertainmentCategoryIds);
-        const allEntNews = [];
-        for (const categoryId of entertainmentCategoryIds) {
-          try {
-            const entNews = await fetchNewsByCategory(language_id, categoryId, 3, 1);
-            if (entNews && entNews.length > 0) {
-              allEntNews.push(...entNews);
-              console.log(`[TechAndEntertainment] Fetched ${entNews.length} entertainment news items for category ${categoryId}`);
-            }
-          } catch (categoryError) {
-            console.error(`[TechAndEntertainment] Error fetching entertainment news for category ${categoryId}:`, categoryError);
-            // Continue with other categories even if one fails
-          }
-        }
-        setEntertainmentNews(allEntNews.slice(0, 3));
-        console.log('[TechAndEntertainment] Successfully fetched entertainment news:', allEntNews.length, 'items');
-      } else {
-        console.log('[TechAndEntertainment] No entertainment categories found for language:', language_id);
-        setEntertainmentNews([]);
-      }
+      setTechnologyNews(techNews);
+      setEntertainmentNews(entNews);
 
-      if (!technologyCategoryIds?.length && !entertainmentCategoryIds?.length) {
-        console.log('[TechAndEntertainment] No technology or entertainment categories found for language:', language_id);
-        setError('No technology or entertainment categories available');
+      console.log('[TechAndEntertainment] Successfully fetched news:', {
+        technology: techNews.length,
+        entertainment: entNews.length
+      });
+
+      if (techNews.length === 0 && entNews.length === 0) {
+        setError('No technology or entertainment news available');
       }
     } catch (err) {
       console.error('[TechAndEntertainment] Error fetching news:', err);
@@ -135,7 +88,7 @@ const TechAndEntertainmentNews: React.FC = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [language_id, categories]);
+  }, [language_id]);
 
   if (loading) {
     return (

@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import { Role } from '../api/apiTypes';
 
 // Utility function to handle image URLs with better fallback
 export const getImageUrl = (newsItem: any, fallbackType: string = 'news'): string => {
@@ -114,7 +115,11 @@ const API_BASE_URL =
 
 // Determine the base URL based on environment
 const getBaseURL = () => {
-  // Always use the Vercel proxy to avoid CORS issues
+  // In development, use the Vite proxy
+  if (import.meta.env.DEV) {
+    return "/api";
+  }
+  // In production, use the Vercel proxy
   return "/api";
 };
 
@@ -407,7 +412,10 @@ export const apiService = {
       const response = await retryRequest(async () => 
         await apiClient.get<ApiResponse<NewsCategory[]>>(`?type=categories&language_id=${language_id}`)
       );
-      return response.data.result || [];
+      console.log(`[getNewsCategories] API response for language ${language_id}:`, response.data);
+      const result = response.data.result || [];
+      console.log(`[getNewsCategories] Categories result:`, result);
+      return result;
     } catch (error: any) {
       console.error('Error fetching categories:', error);
       throw new Error(`Failed to fetch categories for language ${language_id}. Please try again later.`);
@@ -471,6 +479,19 @@ export const apiService = {
     } catch (error: any) {
       console.error('Error fetching breaking news:', error);
       throw new Error('Failed to fetch breaking news. Please try again later.');
+    }
+  },
+
+  // 6. Roles List
+  async getRoles(): Promise<Role[]> {
+    try {
+      const response = await retryRequest(async () => 
+        await apiClient.get<ApiResponse<Role[]>>('/roles')
+      );
+      return response.data.result || [];
+    } catch (error: any) {
+      console.error('Error fetching roles:', error);
+      throw new Error('Failed to fetch roles. Please try again later.');
     }
   }
 };

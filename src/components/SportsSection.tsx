@@ -3,24 +3,11 @@ import { Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { fetchNewsByCategory, getImageUrl } from '@/services/api';
+import { getImageUrl } from '@/services/api';
+import { fetchSportsNews as fetchSportsNewsUtil } from '@/utils/newsUtils';
 import { useDynamicData } from '../contexts/DynamicDataContext';
 
-// Define the structure of media
-interface Media {
-  mediaUrl: string;
-  caption?: string | null;
-}
-
-// Define the structure of each news item
-interface NewsItem {
-  id: string;
-  title: string;
-  shortNewsContent: string | null;
-  media: Media[];
-  categoryName: string;
-  createdAt: string;
-}
+import { NewsItem } from '../api/apiTypes';
 
 // Define the API response structure
 interface ApiResponse {
@@ -53,7 +40,7 @@ const SportsSection = () => {
   const language_id = getCurrentLanguageId();
 
   const fetchSportsNews = async () => {
-    if (!language_id || !categories.length) {
+    if (!language_id) {
       console.log('[SportsSection] Missing required data:', { language_id, categoriesLength: categories.length });
       return;
     }
@@ -61,37 +48,16 @@ const SportsSection = () => {
     setLoading(true);
 
     try {
-      // Get sports category IDs dynamically using the context function
-      const sportsCategoryIds = getCategoryIdsByType('sports');
+      console.log('[SportsSection] Fetching sports news for language:', language_id);
 
-      if (!sportsCategoryIds || sportsCategoryIds.length === 0) {
-        console.log('[SportsSection] No sports categories found for language:', language_id);
-        setSportsNews([]);
-        return;
-      }
-
-      console.log('[SportsSection] Found sports categories:', sportsCategoryIds);
-
-      // Fetch news for all sports categories
-      const allNews = [];
-      for (const categoryId of sportsCategoryIds) {
-        try {
-          const news = await fetchNewsByCategory(language_id, categoryId, 4, 1);
-          if (news && news.length > 0) {
-            allNews.push(...news);
-            console.log(`[SportsSection] Fetched ${news.length} news items for category ${categoryId}`);
-          }
-        } catch (categoryError) {
-          console.error(`[SportsSection] Error fetching news for category ${categoryId}:`, categoryError);
-          // Continue with other categories even if one fails
-        }
-      }
+      // Use the new dynamic utility function
+      const news = await fetchSportsNewsUtil(language_id, 4);
       
-      if (allNews.length > 0) {
-        setSportsNews(allNews.slice(0, 4)); // Take only first 4 items
-        console.log('[SportsSection] Successfully fetched sports news:', allNews.length, 'items');
+      if (news && news.length > 0) {
+        setSportsNews(news);
+        console.log('[SportsSection] Successfully fetched sports news:', news.length, 'items');
       } else {
-        console.log('[SportsSection] No news items found for any sports categories');
+        console.log('[SportsSection] No sports news items found');
         setSportsNews([]);
       }
     } catch (err) {
@@ -104,7 +70,7 @@ const SportsSection = () => {
 
   useEffect(() => {
     fetchSportsNews();
-  }, [language_id, categories]);
+  }, [language_id]);
 
   const handleCardClick = (newsId: string) => {
     navigate(`/news/${newsId}`);

@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import apiClient from '@/api/apiClient';
+import { apiService } from '@/services/api';
+import { Role } from '@/api/apiTypes';
 
-const ROLE_ID = "4f8617f0-a33e-4cc8-9971-704277715354" as const;
+// ROLE_ID will be fetched dynamically from API
+const DEFAULT_ROLE_ID = "4f8617f0-a33e-4cc8-9971-704277715354"; // Fallback role ID
 
 interface SignupProps {
   onSuccess: () => void;
@@ -16,6 +19,8 @@ interface SignupProps {
 const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [selectedRoleId, setSelectedRoleId] = useState<string>(DEFAULT_ROLE_ID);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,6 +29,26 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
     password: "",
     confirmPassword: "",
   });
+
+  // Fetch roles on component mount
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const rolesData = await apiService.getRoles();
+        setRoles(rolesData);
+        // Auto-select the first role if available
+        if (rolesData.length > 0) {
+          setSelectedRoleId(rolesData[0].id);
+        }
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+        // Use default role ID if API fails
+        setSelectedRoleId(DEFAULT_ROLE_ID);
+      }
+    };
+
+    fetchRoles();
+  }, []);
 
   const validateForm = () => {
     const requiredFields = [
@@ -95,7 +120,7 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
 
       const response = await apiClient.post(`/auth/register`, {
         ...payload,
-        roleId: ROLE_ID,
+        roleId: selectedRoleId,
       });
 
       console.log("Signup successful:", response.data);
@@ -222,6 +247,22 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
           maxLength={10}
           autoComplete="tel"
         />
+
+        {/* Role Selection */}
+        <div className="w-full">
+          <select
+            value={selectedRoleId}
+            onChange={(e) => setSelectedRoleId(e.target.value)}
+            disabled={loading}
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+          >
+            {roles.map((role) => (
+              <option key={role.id} value={role.id}>
+                {role.role} {role.description && `- ${role.description}`}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <Input
           type="password"

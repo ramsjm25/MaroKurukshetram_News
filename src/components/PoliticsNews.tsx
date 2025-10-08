@@ -3,26 +3,12 @@ import { Clock, User, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { fetchNewsByCategory, getImageUrl } from '@/services/api';
+import { getImageUrl } from '@/services/api';
+import { fetchPoliticsNews as fetchPoliticsNewsUtil } from '@/utils/newsUtils';
 import { formatTimeAgo } from "@/utils/timeUtils";
 import { useDynamicData } from '../contexts/DynamicDataContext';
 
-interface NewsItem {
-  id: string;
-  title: string;
-  shortNewsContent?: string;
-  excerpt?: string;
-  categoryName?: string;
-  authorName?: string;
-  createdAt: string;
-  publishedAt?: string;
-  districtName?: string;
-  media?: Array<{
-    mediaUrl: string;
-    mediaType: string;
-  }>;
-  source?: string;
-}
+import { NewsItem } from '../api/apiTypes';
 
 interface NewsResponse {
   status: number;
@@ -54,7 +40,7 @@ const PoliticsNews: React.FC = () => {
   const language_id = getCurrentLanguageId();
 
   const fetchNews = async () => {
-    if (!language_id || !categories.length) {
+    if (!language_id) {
       console.log('[PoliticsNews] Missing required data:', { language_id, categoriesLength: categories.length });
       return;
     }
@@ -63,39 +49,17 @@ const PoliticsNews: React.FC = () => {
     setError(null);
 
     try {
-      // Get politics category IDs dynamically using the context function
-      const politicsCategoryIds = getCategoryIdsByType('politics');
+      console.log('[PoliticsNews] Fetching politics news for language:', language_id);
 
-      if (!politicsCategoryIds || politicsCategoryIds.length === 0) {
-        console.log('[PoliticsNews] No politics categories found for language:', language_id);
-        setPoliticsNews([]);
-        setError(`No politics categories available for ${selectedLanguage?.language_name || 'selected language'}`);
-        return;
-      }
-
-      console.log('[PoliticsNews] Found politics categories:', politicsCategoryIds);
-
-      // Fetch news for all politics categories
-      const allNews = [];
-      for (const categoryId of politicsCategoryIds) {
-        try {
-          const news = await fetchNewsByCategory(language_id, categoryId, 9, 1);
-          if (news && news.length > 0) {
-            allNews.push(...news);
-            console.log(`[PoliticsNews] Fetched ${news.length} news items for category ${categoryId}`);
-          }
-        } catch (categoryError) {
-          console.error(`[PoliticsNews] Error fetching news for category ${categoryId}:`, categoryError);
-          // Continue with other categories even if one fails
-        }
-      }
+      // Use the new dynamic utility function
+      const news = await fetchPoliticsNewsUtil(language_id, 9);
       
-      if (allNews.length > 0) {
-        setPoliticsNews(allNews.slice(0, 9)); // Take only first 9 items
-        console.log('[PoliticsNews] Successfully fetched politics news:', allNews.length, 'items');
+      if (news && news.length > 0) {
+        setPoliticsNews(news);
+        console.log('[PoliticsNews] Successfully fetched politics news:', news.length, 'items');
         setError(null);
       } else {
-        console.log('[PoliticsNews] No news items found for any politics categories');
+        console.log('[PoliticsNews] No politics news items found');
         setPoliticsNews([]);
         setError('No politics news available');
       }
@@ -110,7 +74,7 @@ const PoliticsNews: React.FC = () => {
 
   useEffect(() => {
     fetchNews();
-  }, [language_id, categories]);
+  }, [language_id]);
 
 
   const handleCardClick = (newsId: string) => {

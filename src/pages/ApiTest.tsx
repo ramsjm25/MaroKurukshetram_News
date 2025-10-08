@@ -24,10 +24,33 @@ const ApiTestPage = () => {
     setResult('Testing News API...');
     
     try {
+      // First get languages to get a valid language_id
+      const languagesResponse = await apiClient.get('?type=languages');
+      const languages = languagesResponse.data.result;
+      
+      if (!languages || languages.length === 0) {
+        setResult('❌ No languages available for testing');
+        return;
+      }
+      
+      const languageId = languages[0].id;
+      
+      // Then get categories for that language
+      const categoriesResponse = await apiClient.get(`?type=categories&language_id=${languageId}`);
+      const categories = categoriesResponse.data.result;
+      
+      if (!categories || categories.length === 0) {
+        setResult('❌ No categories available for testing');
+        return;
+      }
+      
+      const categoryId = categories[0].id;
+      
+      // Now test news API with dynamic IDs
       const response = await apiClient.get('/news/filter-multi-categories', {
         params: {
-          categoryIds: '9c70fa99-10a7-42c1-8dcb-db0cbfed8bb0',
-          language_id: '5dd95034-d533-4b09-8687-cd2ed3682ab6',
+          categoryIds: categoryId,
+          language_id: languageId,
           limit: 1,
           page: 1
         }

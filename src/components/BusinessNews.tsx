@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { TrendingUp, Clock, Loader2 } from "lucide-react";
 import { useDynamicData } from '../contexts/DynamicDataContext';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchNewsByCategory, getImageUrl } from '@/services/api';
+import { getImageUrl } from '@/services/api';
+import { fetchBusinessNews as fetchBusinessNewsUtil } from '@/utils/newsUtils';
 
 // Removed hardcoded language mapping - now using dynamic data context
 
@@ -15,22 +16,7 @@ interface MarketStat {
   trend: "up" | "down";
 }
 
-interface NewsItem {
-  id: string;
-  title: string;
-  shortNewsContent?: string;
-  excerpt?: string;
-  categoryName?: string;
-  authorName?: string;
-  createdAt: string;
-  publishedAt?: string;
-  districtName?: string;
-  media?: Array<{
-    mediaUrl: string;
-    mediaType: string;
-  }>;
-  source?: string;
-}
+import { NewsItem } from '../api/apiTypes';
 
 interface NewsResponse {
   status: number;
@@ -61,7 +47,7 @@ const BusinessNews = () => {
   const language_id = getCurrentLanguageId();
 
   const fetchBusinessNews = async () => {
-    if (!language_id || !categories.length) {
+    if (!language_id) {
       console.log('[BusinessNews] Missing required data:', { language_id, categoriesLength: categories.length });
       return;
     }
@@ -70,39 +56,17 @@ const BusinessNews = () => {
     setError(null);
 
     try {
-      // Get business category IDs dynamically using the context function
-      const businessCategoryIds = getCategoryIdsByType('business');
+      console.log('[BusinessNews] Fetching business news for language:', language_id);
 
-      if (!businessCategoryIds || businessCategoryIds.length === 0) {
-        console.log('[BusinessNews] No business categories found for language:', language_id);
-        setBusinessNews([]);
-        setError(`No business categories available for ${selectedLanguage?.language_name || 'selected language'}`);
-        return;
-      }
-
-      console.log('[BusinessNews] Found business categories:', businessCategoryIds);
-
-      // Fetch news for all business categories
-      const allNews = [];
-      for (const categoryId of businessCategoryIds) {
-        try {
-          const news = await fetchNewsByCategory(language_id, categoryId, 8, 1);
-          if (news && news.length > 0) {
-            allNews.push(...news);
-            console.log(`[BusinessNews] Fetched ${news.length} news items for category ${categoryId}`);
-          }
-        } catch (categoryError) {
-          console.error(`[BusinessNews] Error fetching news for category ${categoryId}:`, categoryError);
-          // Continue with other categories even if one fails
-        }
-      }
+      // Use the new dynamic utility function
+      const news = await fetchBusinessNewsUtil(language_id, 8);
       
-      if (allNews.length > 0) {
-        setBusinessNews(allNews.slice(0, 8)); // Take only first 8 items
-        console.log('[BusinessNews] Successfully fetched business news:', allNews.length, 'items');
+      if (news && news.length > 0) {
+        setBusinessNews(news);
+        console.log('[BusinessNews] Successfully fetched business news:', news.length, 'items');
         setError(null);
       } else {
-        console.log('[BusinessNews] No news items found for any business categories');
+        console.log('[BusinessNews] No business news items found');
         setBusinessNews([]);
         setError('No business news available');
       }
@@ -117,7 +81,7 @@ const BusinessNews = () => {
 
   useEffect(() => {
     fetchBusinessNews();
-  }, [language_id, categories]);
+  }, [language_id]);
 
   const handleCardClick = (newsId: string) => {
     navigate(`/news/${newsId}`);
