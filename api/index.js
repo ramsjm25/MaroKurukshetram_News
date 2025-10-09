@@ -167,6 +167,10 @@ export default async function handler(req, res) {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const pathname = url.pathname.replace('/api', '');
       
+      console.log(`[Direct Path Debug] Full URL: ${req.url}`);
+      console.log(`[Direct Path Debug] Pathname: ${pathname}`);
+      console.log(`[Direct Path Debug] Query params:`, query);
+      
       if (pathname.startsWith('/news/') || pathname.startsWith('/auth/') || pathname.startsWith('/local-mandi-categories') || pathname.startsWith('/e-newspapers') || pathname.startsWith('/local-mandis')) {
         targetUrl = `${apiBaseUrl}${pathname}`;
         logPrefix = '[Direct API]';
@@ -174,6 +178,11 @@ export default async function handler(req, res) {
         // Special handling for news filtering with fallback category IDs
         if (pathname.startsWith('/news/filter-multi-categories')) {
           logPrefix = '[News Filter API]';
+        }
+        
+        // Special handling for e-newspapers
+        if (pathname.startsWith('/e-newspapers')) {
+          logPrefix = '[E-Newspapers Direct API]';
         }
       } else {
         return res.status(400).json({ 
