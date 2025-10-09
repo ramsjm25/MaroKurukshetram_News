@@ -105,7 +105,7 @@ const Newspaper = () => {
   const editions: Edition[] = useMemo(() => {
     if (!newspapersData?.result?.items) return [];
     
-    // console.log('Processing newspapers data:', newspapersData.result.items);
+    console.log('Processing newspapers data:', newspapersData.result.items);
     
     return newspapersData.result.items.map((newspaper: ENewspaper) => {
       const displayDate = formatDateForDisplay(newspaper.date, selectedLanguage?.code || "en");
@@ -114,16 +114,14 @@ const Newspaper = () => {
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
       
-      // Log PDF URL for debugging (only in development)
-      if (import.meta.env.DEV) {
-        console.log(`Newspaper for ${newspaper.date}:`, {
-          id: newspaper.id,
-          pdfUrl: newspaper.pdfUrl,
-          pdfPath: newspaper.pdfPath,
-          hasPdfUrl: !!newspaper.pdfUrl,
-          hasPdfPath: !!newspaper.pdfPath
-        });
-      }
+      // Log PDF URL for debugging
+      console.log(`Newspaper for ${newspaper.date}:`, {
+        id: newspaper.id,
+        pdfUrl: newspaper.pdfUrl,
+        pdfPath: newspaper.pdfPath,
+        hasPdfUrl: !!newspaper.pdfUrl,
+        hasPdfPath: !!newspaper.pdfPath
+      });
       
       // Use pdfPath if pdfUrl is not available
       const finalPdfUrl = newspaper.pdfUrl || newspaper.pdfPath || '';
@@ -153,17 +151,11 @@ const Newspaper = () => {
     const newspaper = editions.find(n => n.date === date);
     
     if (newspaper) {
-      // Only log in development mode
-      if (import.meta.env.DEV) {
-        console.log('Found newspaper for date:', date, 'PDF URL:', newspaper.pdfUrl);
-      }
+      console.log('Found newspaper for date:', date, 'PDF URL:', newspaper.pdfUrl);
       return newspaper;
     }
     
-    // Only log in development mode
-    if (import.meta.env.DEV) {
-      console.log('No newspaper found for date:', date);
-    }
+    console.log('No newspaper found for date:', date);
     // Fallback for dates without newspapers
     return {
       id: '',
@@ -241,17 +233,52 @@ const Newspaper = () => {
 
   // Show error state
   if (error) {
-  return (
+    const isAuthError = error.message?.includes('Authentication required') || 
+                       error.name === 'AuthenticationError' || 
+                       error.status === 401;
+    
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    
+    return (
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="text-center py-6 sm:py-8 px-2">
           <AlertCircle className="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 text-red-500" />
           <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">{t("newspaper.title")}</h2>
-          <p className="text-red-600 mb-2 sm:mb-4 text-sm sm:text-base">{t("newspaper.errorLoading")}: {error.message}</p>
-          <p className="text-gray-600 mb-4 text-xs sm:text-sm">{t("newspaper.checkApiEndpoint")}</p>
-          <Button onClick={() => refetch()} className="bg-indigo-600 hover:bg-indigo-700 text-sm sm:text-base px-4 py-2">
-            <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
-            {t("newspaper.tryAgain")}
-          </Button>
+          
+          {isAuthError ? (
+            <>
+              <p className="text-red-600 mb-2 sm:mb-4 text-sm sm:text-base">{t("newspaper.authRequired")}</p>
+              <p className="text-gray-600 mb-4 text-xs sm:text-sm">{t("newspaper.loginToAccess")}</p>
+              {!isLoggedIn && (
+                <div className="mt-4">
+                  <Button 
+                    onClick={() => window.location.href = '/#login'} 
+                    className="bg-blue-600 hover:bg-blue-700 text-sm sm:text-base px-4 py-2 mr-2"
+                  >
+                    {t("common.login")}
+                  </Button>
+                  <Button 
+                    onClick={() => window.location.href = '/#signup'} 
+                    className="bg-green-600 hover:bg-green-700 text-sm sm:text-base px-4 py-2"
+                  >
+                    {t("common.signup")}
+                  </Button>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <p className="text-red-600 mb-2 sm:mb-4 text-sm sm:text-base">{t("newspaper.errorLoading")}: {error.message}</p>
+              <p className="text-gray-600 mb-4 text-xs sm:text-sm">{t("newspaper.checkApiEndpoint")}</p>
+            </>
+          )}
+          
+          <div className="mt-4">
+            <Button onClick={() => refetch()} className="bg-indigo-600 hover:bg-indigo-700 text-sm sm:text-base px-4 py-2">
+              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+              {t("newspaper.tryAgain")}
+            </Button>
+          </div>
         </div>
       </main>
     );
@@ -421,10 +448,7 @@ const Newspaper = () => {
                   src={`https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(selectedNewspaper.pdfUrl)}`}
                   className="w-full h-full border-0"
                   onLoad={() => {
-                    // Only log in development mode
-                    if (import.meta.env.DEV) {
-                      console.log('PDF loaded successfully via Google Docs viewer');
-                    }
+                    console.log('PDF loaded successfully via Google Docs viewer');
                     setPdfLoading(false);
                     setPdfError(null);
                   }}

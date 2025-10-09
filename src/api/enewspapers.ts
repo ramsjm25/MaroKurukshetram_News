@@ -1,267 +1,85 @@
-import axios from "axios";
-import { ENewspaperResponse, GetENewspapersParams, ENewspaper } from "./apiTypes";
+import axios from 'axios';
+import { ENewspaperResponse, GetENewspapersParams } from "./apiTypes";
 
-// Generate fallback newspapers for development environment when API requires authentication
-function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperResponse {
-  const newspapers: ENewspaper[] = [];
-  const languageId = params.language_id || '5dd95034-d533-4b09-8687-cd2ed3682ab6'; // Default to English
-  const dateFrom = params.dateFrom || new Date().toISOString().split('T')[0];
-  const dateTo = params.dateTo || new Date().toISOString().split('T')[0];
-  
-  // Generate newspapers for the requested date range
-  const startDate = new Date(dateFrom);
-  const endDate = new Date(dateTo);
-  
-  // Alternative PDF sources for different dates (actual PDFs instead of dummy ones)
-  const alternativePDFSources = [
-    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-    'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4615_sample_explain.pdf',
-    'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
-    'https://www.orimi.com/pdf-test.pdf'
-  ];
-  
-  // Real PDF URLs for different dates (actual PDFs instead of placeholder images)
-  const newspaperContent = {
-    '2025-10-05': {
-      title: 'MARO KURUKSHETRAM',
-      subtitle: 'Daily News - October 5, 2025',
-      headlines: [
-        'Breaking: Major Political Development in Telangana',
-        'Hyderabad Metro Expansion Phase 3 Announced',
-        'Tech Hub Growth: New IT Companies Set Up Base',
-        'Sports: Local Cricket Team Wins Championship',
-        'Weather: Monsoon Season Ends, Clear Skies Ahead'
-      ],
-      pdfUrl: alternativePDFSources[0], // Use alternative PDF source
-      thumbnail: alternativePDFSources[0]
-    },
-    '2025-10-04': {
-      title: 'MARO KURUKSHETRAM',
-      subtitle: 'Daily News - October 4, 2025',
-      headlines: [
-        'Business: Local Markets Show Positive Growth',
-        'Education: New Schools Inaugurated in District',
-        'Health: Free Medical Camp Organized',
-        'Culture: Traditional Festival Celebrations Begin',
-        'Technology: Digital India Initiative Progress'
-      ],
-      pdfUrl: alternativePDFSources[1], // Use different PDF source
-      thumbnail: alternativePDFSources[1]
-    },
-    '2025-10-03': {
-      title: 'MARO KURUKSHETRAM',
-      subtitle: 'Daily News - October 3, 2025',
-      headlines: [
-        'Politics: State Assembly Session Concludes',
-        'Infrastructure: New Road Projects Approved',
-        'Agriculture: Farmers Receive Support Package',
-        'Entertainment: Local Film Festival Begins',
-        'Environment: Green Initiative Launched'
-      ],
-      pdfUrl: alternativePDFSources[2], // Use different PDF source
-      thumbnail: alternativePDFSources[2]
-    }
-  };
-  
-  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-    const dateStr = d.toISOString().split('T')[0];
-    const content = newspaperContent[dateStr as keyof typeof newspaperContent] || {
-      title: 'MARO KURUKSHETRAM',
-      subtitle: `Daily News - ${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
-      headlines: [
-        'Local News Update',
-        'Regional Development News',
-        'Community Events',
-        'Business Updates',
-        'Sports Highlights'
-      ],
-      pdfUrl: alternativePDFSources[Math.floor(Math.random() * alternativePDFSources.length)], // Use random PDF source
-      thumbnail: alternativePDFSources[Math.floor(Math.random() * alternativePDFSources.length)]
-    };
-    
-    newspapers.push({
-      id: `fallback-${dateStr}`,
-      language_id: languageId,
-      date: dateStr,
-      pdfPath: null,
-      pdfUrl: content.pdfUrl,
-      type: 'paper',
-      thumbnail: content.thumbnail,
-      addedBy: 'system',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      title: content.title,
-      subtitle: content.subtitle,
-      headlines: content.headlines,
-      language: {
-        id: languageId,
-        languageName: 'English',
-        icon: '🇺🇸',
-        code: 'en',
-        createdAt: new Date().toISOString(),
-        is_active: true
-      },
-      user: {
-        id: 'system-user',
-        email: 'system@marokurukshetram.com',
-        firstName: 'System',
-        lastName: 'User',
-        phone: '',
-        gender: '',
-        dob: '',
-        status: 'active',
-        is_active: true,
-        profilePicture: '',
-        avatar: '',
-        preferences: {
-          theme: 'light',
-          notifications: false
-        },
-        lastLoginAt: new Date().toISOString(),
-        createdBy: null,
-        updatedBy: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        roleId: 'admin',
-        isDeleted: false,
-        deletedAt: null,
-        passwordResetToken: null,
-        passwordResetExpires: null
-      }
-    });
-  }
-  
-  return {
-    status: 1,
-    message: 'E-newspapers (development fallback)',
-    result: {
-      items: newspapers.slice(0, params.limit || 10),
-      limit: params.limit || 10,
-      page: params.page || 1,
-      total: newspapers.length
-    }
-  };
-}
-
-// Determine the base URL based on environment (same logic as main API client)
-const getBaseURL = () => {
-  // In development, use the Vite proxy
-  if (import.meta.env.DEV) {
-    return "/api";
-  }
-  // In production, use the Vercel proxy
-  return "/api";
-};
-
-// Create a public API client for e-newspapers (no authentication required)
+// Create a public API client for endpoints that don't require authentication
 const publicApiClient = axios.create({
-  baseURL: getBaseURL(), // Use the same base URL logic as the main API client
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 10000, // 10 second timeout
 });
 
-// Add request interceptor for public API client (no JWT token)
-publicApiClient.interceptors.request.use(
-  (config) => {
-    // Only log in development mode
-    if (import.meta.env.DEV) {
-      console.log('[E-Newspaper] Making public API request to:', config.url);
-      console.log('[E-Newspaper] Full URL:', config.baseURL + config.url);
-    }
-    return config;
-  },
-  (error) => {
-    console.error('[E-Newspaper] Request interceptor error:', error);
-    return Promise.reject(error);
-  }
-);
-
-// Add response interceptor for public API client
-publicApiClient.interceptors.response.use(
-  (response) => {
-    // Only log in development mode
-    if (import.meta.env.DEV) {
-      console.log('[E-Newspaper] API Response received:', {
-        url: response.config.url,
-        status: response.status,
-        data: response.data
-      });
-    }
-    return response;
-  },
-  (error) => {
-    console.error('[E-Newspaper] API Error:', error.response?.data || error.message);
-    return Promise.reject(error);
-  }
-);
-
 // Fetch e-newspapers with date range and language filter
 export async function getENewspapers(params: GetENewspapersParams): Promise<ENewspaperResponse> {
-  // Only log in development mode
-  if (import.meta.env.DEV) {
-    console.log('[E-Newspaper] Fetching e-newspapers with params:', params);
-  }
+  console.log('Fetching e-newspapers with params:', params);
   
   try {
-    // Use public API client (no authentication required)
-    const response = await publicApiClient.get<ENewspaperResponse>("?type=e-newspapers", {
+    // Check if user is authenticated
+    const token = localStorage.getItem('token');
+    
+    // Use authenticated API client if token is available
+    const client = token ? 
+      axios.create({
+        baseURL: "/api",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        timeout: 10000,
+      }) : 
+      publicApiClient;
+    
+    console.log('Using', token ? 'authenticated' : 'public', 'API client for e-newspapers');
+    
+    const response = await client.get<ENewspaperResponse>("/e-newspapers", {
       params: {
         page: params.page || 1,
         limit: params.limit || 10,
         language_id: params.language_id,
         dateFrom: params.dateFrom,
-        dateTo: params.dateTo
-        // Remove the duplicate type parameter - it's already in the URL
+        dateTo: params.dateTo,
+        type: params.type || "paper"
       }
     });
     
-    // Only log in development mode
-    if (import.meta.env.DEV) {
-      console.log('[E-Newspaper] API response:', response.data);
-      console.log('[E-Newspaper] Number of newspapers found:', response.data.result?.items?.length || 0);
+    console.log('E-newspapers API response:', response.data);
+    console.log('Number of newspapers found:', response.data.result?.items?.length || 0);
     
     // Log each newspaper's PDF URL for debugging
     if (response.data.result?.items) {
       response.data.result.items.forEach((newspaper, index) => {
-          console.log(`[E-Newspaper] Newspaper ${index + 1}:`, {
+        console.log(`Real Newspaper ${index + 1}:`, {
           date: newspaper.date,
           pdfUrl: newspaper.pdfUrl,
           pdfPath: newspaper.pdfPath,
           hasPdf: !!(newspaper.pdfUrl || newspaper.pdfPath)
         });
       });
-      }
     }
     
     return response.data;
-  } catch (error: any) {
-    console.error('[E-Newspaper] Error fetching e-newspapers from API:', error);
-    console.error('[E-Newspaper] API Error Details:', {
+  } catch (error) {
+    console.error('Error fetching e-newspapers from API:', error);
+    console.error('API Error Details:', {
       message: error.message,
       status: error.response?.status,
       data: error.response?.data
     });
     
-    // Handle 401 Unauthorized error in development environment
+    // Handle authentication errors specifically
     if (error.response?.status === 401) {
-      console.log('[E-Newspaper] 401 Unauthorized in development, providing fallback data');
-      return generateFallbackNewspapers(params);
+      console.log('Authentication required for e-newspapers. User may need to log in.');
+      // Throw an error that React Query can catch
+      const authError = new Error("Authentication required. Please log in to access newspapers.");
+      authError.name = 'AuthenticationError';
+      authError.status = 401;
+      throw authError;
     }
     
-    // Return empty result for other failed requests
-    console.log('[E-Newspaper] API failed, returning empty result');
-    return {
-      status: 0,
-      message: "Failed to fetch newspapers",
-      result: {
-        items: [],
-        limit: params.limit || 10,
-        page: params.page || 1,
-        total: 0
-      }
-    };
+    // Throw error for other cases so React Query can handle it
+    console.log('API failed, throwing error');
+    throw error;
   }
 }
 

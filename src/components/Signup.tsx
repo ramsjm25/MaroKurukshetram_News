@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import apiClient from '@/api/apiClient';
 import { apiService } from '@/services/api';
 import { Role } from '@/api/apiTypes';
@@ -19,6 +20,8 @@ interface SignupProps {
 const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
   const [selectedRoleId, setSelectedRoleId] = useState<string>(DEFAULT_ROLE_ID);
   const [formData, setFormData] = useState({
@@ -187,25 +190,25 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex justify-center mb-4">
+    <div className="w-full max-w-md mx-auto px-4 sm:px-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <img
             src="/lovable-uploads/3b336ab1-e951-42a8-b0c4-758eed877e6a.png"
             alt="App Logo"
-            className="h-18 w-32"
+            className="h-16 w-28 sm:h-18 sm:w-32"
           />
         </div>
 
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-4 sm:space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Input
               placeholder={t("auth.firstName") || "First Name"}
               value={formData.firstName}
               onChange={(e) => handleInputChange("firstName", e.target.value)}
               onKeyPress={handleKeyPress}
               disabled={loading}
-              className="w-full"
+              className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5"
               autoComplete="given-name"
             />
 
@@ -215,7 +218,7 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
               onChange={(e) => handleInputChange("lastName", e.target.value)}
               onKeyPress={handleKeyPress}
               disabled={loading}
-              className="w-full"
+              className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5"
               autoComplete="family-name"
             />
           </div>
@@ -227,7 +230,7 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
           onChange={(e) => handleInputChange("email", e.target.value)}
           onKeyPress={handleKeyPress}
           disabled={loading}
-          className="w-full"
+          className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5"
           autoComplete="email"
         />
 
@@ -243,7 +246,7 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
           }}
           onKeyPress={handleKeyPress}
           disabled={loading}
-          className="w-full"
+          className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5"
           maxLength={10}
           autoComplete="tel"
         />
@@ -254,7 +257,7 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
             value={selectedRoleId}
             onChange={(e) => setSelectedRoleId(e.target.value)}
             disabled={loading}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           >
             {roles.map((role) => (
               <option key={role.id} value={role.id}>
@@ -264,36 +267,56 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
           </select>
         </div>
 
-        <Input
-          type="password"
-          placeholder={t("auth.password") || "Password"}
-          value={formData.password}
-          onChange={(e) => handleInputChange("password", e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-          className="w-full"
-          autoComplete="new-password"
-        />
+        <div className="relative">
+          <Input
+            type={showPassword ? "text" : "password"}
+            placeholder={t("auth.password") || "Password"}
+            value={formData.password}
+            onChange={(e) => handleInputChange("password", e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+            className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5 pr-12"
+            autoComplete="new-password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+            disabled={loading}
+          >
+            {showPassword ? <EyeOff className="h-5 w-5 sm:h-4 sm:w-4" /> : <Eye className="h-5 w-5 sm:h-4 sm:w-4" />}
+          </button>
+        </div>
 
-        <Input
-          type="password"
-          placeholder={t("auth.confirmPassword") || "Confirm Password"}
-          value={formData.confirmPassword}
-          onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={loading}
-          className="w-full"
-          autoComplete="new-password"
-        />
+        <div className="relative">
+          <Input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder={t("auth.confirmPassword") || "Confirm Password"}
+            value={formData.confirmPassword}
+            onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+            className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5 pr-12"
+            autoComplete="new-password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+            disabled={loading}
+          >
+            {showConfirmPassword ? <EyeOff className="h-5 w-5 sm:h-4 sm:w-4" /> : <Eye className="h-5 w-5 sm:h-4 sm:w-4" />}
+          </button>
+        </div>
 
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-500 hover:bg-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-12 sm:h-11 bg-red-500 hover:bg-red-600 text-white text-base sm:text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                <span className="animate-spin rounded-full h-5 w-5 sm:h-4 sm:w-4 border-b-2 border-white"></span>
                 {t("common.loading") || "Loading..."}
               </span>
             ) : (
@@ -302,12 +325,12 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
           </Button>
         </div>
 
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
+        <div className="text-center pt-2">
+          <p className="text-sm sm:text-sm text-gray-600">
             {t("auth.alreadyHaveAccount") || "Already have an account?"}{" "}
             <button
               type="button"
-              className="text-red-600 underline hover:text-red-700 transition-colors"
+              className="text-red-600 underline hover:text-red-700 transition-colors font-medium"
               onClick={onSwitchToLogin}
               disabled={loading}
             >
@@ -317,11 +340,11 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
         </div>
 
         <div className="text-center">
-          <p className="text-xs text-gray-500 leading-relaxed">
+          <p className="text-xs sm:text-xs text-gray-500 leading-relaxed">
             {t("auth.termsAgreement") || "By signing up, you agree to our"}{" "}
             <button 
               type="button" 
-              className="text-red-600 underline hover:text-red-700 transition-colors"
+              className="text-red-600 underline hover:text-red-700 transition-colors font-medium"
               disabled={loading}
             >
               {t("auth.termsOfService") || "Terms of Service"}
@@ -329,7 +352,7 @@ const Signup = ({ onSuccess, onSwitchToLogin, onError, onClearError }: SignupPro
             {t("common.and") || "and"}{" "}
             <button 
               type="button" 
-              className="text-red-600 underline hover:text-red-700 transition-colors"
+              className="text-red-600 underline hover:text-red-700 transition-colors font-medium"
               disabled={loading}
             >
               {t("auth.privacyPolicy") || "Privacy Policy"}

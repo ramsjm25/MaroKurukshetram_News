@@ -2153,65 +2153,65 @@ const Header = () => {
                           <span>{t("profile.privacyPolicy")}</span>
                         </DropdownMenuItem>
                       </DialogTrigger>
-                      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                        <DialogHeader className="text-center pb-6">
-                          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mb-4">
-                            <Shield className="w-8 h-8 text-white" />
+                      <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 mx-4 sm:mx-6 lg:mx-8">
+                        <DialogHeader className="text-center pb-4 sm:pb-6">
+                          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                            <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                           </div>
-                          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">{t("profile.privacyPolicy")}</DialogTitle>
-                          <div className="flex items-center justify-center mt-2">
-                            <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500 dark:text-gray-400 mr-2" />
-                            <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{t("profile.lastUpdated")}: {new Date().toLocaleDateString()}</span>
+                          <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white px-2">{t("profile.privacyPolicy")}</DialogTitle>
+                          <div className="flex items-center justify-center mt-2 px-2">
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                            <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t("profile.lastUpdated")}: {new Date().toLocaleDateString()}</span>
                           </div>
                         </DialogHeader>
                         
-                        <div className="space-y-6 py-2">
+                        <div className="space-y-4 sm:space-y-6 py-2 px-2 sm:px-4">
                           {/* Introduction */}
-                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-100 dark:border-blue-800">
-                            <div className="text-center mb-4">
-                              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Marokurukshetram News Privacy Policy</h3>
-                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-4 sm:p-6 border border-blue-100 dark:border-blue-800">
+                            <div className="text-center mb-3 sm:mb-4">
+                              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">Marokurukshetram News Privacy Policy</h3>
+                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
                                 Please read this Privacy Policy very carefully. It contains important information about Your rights and obligations. This Privacy Policy sets out the manner in which Marokurukshetram News Private Limited ("Marokurukshetram News", "We", "Us", "Our") collects, uses, maintains, and discloses information collected from the users of our mobile application (hereinafter referred to as "You", "Your", "User").
                               </p>
-                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-sm mt-2">
+                              <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm mt-2">
                                 By downloading, installing, or using the Marokurukshetram News App (hereinafter referred to as "App"), You consent to the use of Your personal information as outlined in this Privacy Policy.
                               </p>
                             </div>
                           </div>
 
                           {/* Information Collected */}
-                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-green-100 dark:border-green-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">1</span>
+                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 sm:p-6 border border-green-100 dark:border-green-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">1</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Information Collected from the User</h4>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 sm:mb-3">Information Collected from the User</h4>
                                 
-                                <div className="space-y-4">
+                                <div className="space-y-3 sm:space-y-4">
                                   <div>
-                                    <h5 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">1.1 Technological Data</h5>
-                                    <ul className="text-gray-700 dark:text-gray-300 text-sm space-y-1 ml-4">
+                                    <h5 className="font-semibold text-gray-800 dark:text-gray-200 mb-1 sm:mb-2 text-sm sm:text-base">1.1 Technological Data</h5>
+                                    <ul className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm space-y-1 ml-2 sm:ml-4">
                                       <li>• IP Address</li>
                                       <li>• Location (only with Your permission)</li>
                                       <li>• Device Camera</li>
                                       <li>• Device Storage</li>
                                       <li>• Device Information and interaction activity with the App</li>
                                     </ul>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm mt-2">
+                                    <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm mt-2">
                                       The App requires access to device storage to save offline news, images, and videos. Location access helps us serve localized news. The camera may be used for features like Citizen Journalism submissions.
                                     </p>
                                   </div>
 
                                   <div>
-                                    <h5 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">1.2 Personally Identifiable Information (PII) & Non-PII</h5>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">We may collect:</p>
-                                    <ul className="text-gray-700 dark:text-gray-300 text-sm space-y-1 ml-4">
+                                    <h5 className="font-semibold text-gray-800 dark:text-gray-200 mb-1 sm:mb-2 text-sm sm:text-base">1.2 Personally Identifiable Information (PII) & Non-PII</h5>
+                                    <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm mb-2">We may collect:</p>
+                                    <ul className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm space-y-1 ml-2 sm:ml-4">
                                       <li>• Email ID</li>
                                       <li>• Mobile Number</li>
                                       <li>• Advertiser ID</li>
                                     </ul>
-                                    <p className="text-gray-700 dark:text-gray-300 text-sm mt-2">
+                                    <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm mt-2">
                                       These are collected only in specific circumstances: Comments Section, Citizen Journalism, and Advertising purposes. All PII and non-PII data is securely routed through our private domains: https://v1.marokurukshetram.com and https://v2.marokurukshetram.com
                                     </p>
                                   </div>
@@ -2221,15 +2221,15 @@ const Header = () => {
                           </div>
 
                           {/* Use of Information */}
-                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-100 dark:border-purple-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">2</span>
+                          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 sm:p-6 border border-purple-100 dark:border-purple-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">2</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Use of Collected Information</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm mb-2">Your information may be used to:</p>
-                                <ul className="text-gray-700 dark:text-gray-300 text-sm space-y-1 ml-4">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 sm:mb-3">Use of Collected Information</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm mb-2">Your information may be used to:</p>
+                                <ul className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm space-y-1 ml-2 sm:ml-4">
                                   <li>• Enable login and authenticate Your access</li>
                                   <li>• Personalize Your news and app experience</li>
                                   <li>• Send important updates, administrative emails, and policy changes</li>
@@ -2242,14 +2242,14 @@ const Header = () => {
                           </div>
 
                           {/* Data Protection */}
-                          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl p-6 border border-orange-100 dark:border-orange-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">3</span>
+                          <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl p-4 sm:p-6 border border-orange-100 dark:border-orange-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">3</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Data Protection</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">Data Protection</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
                                   We adopt appropriate technical and organizational measures to safeguard Your information against unauthorized access, alteration, or disclosure. Data is encrypted and securely stored in our databases. However, no system is 100% secure. Users are encouraged to safeguard their devices and login credentials.
                                 </p>
                               </div>
@@ -2257,14 +2257,14 @@ const Header = () => {
                           </div>
 
                           {/* Sharing Information */}
-                          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-teal-100 dark:border-teal-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">4</span>
+                          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl p-4 sm:p-6 border border-teal-100 dark:border-teal-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-teal-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">4</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Sharing of Personal Information</h4>
-                                <ul className="text-gray-700 dark:text-gray-300 text-sm space-y-1 ml-4">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">Sharing of Personal Information</h4>
+                                <ul className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm space-y-1 ml-2 sm:ml-4">
                                   <li>• We do not sell or trade Your information</li>
                                   <li>• Aggregated demographic information (non-identifiable) may be shared with trusted affiliates, advertisers, or partners</li>
                                   <li>• Information may be disclosed if required by law, national security, or legal processes</li>
@@ -2275,14 +2275,14 @@ const Header = () => {
                           </div>
 
                           {/* User Choices */}
-                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl p-6 border border-indigo-100 dark:border-indigo-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">5</span>
+                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl p-4 sm:p-6 border border-indigo-100 dark:border-indigo-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-indigo-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">5</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">User Choices</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">User Choices</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
                                   You may opt-out of promotional emails at any time by following the unsubscribe instructions provided in the email. You may still receive essential communications (account, security, or legal updates).
                                 </p>
                               </div>
@@ -2290,14 +2290,14 @@ const Header = () => {
                           </div>
 
                           {/* Advertisements */}
-                          <div className="bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl p-6 border border-pink-100 dark:border-pink-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-pink-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">6</span>
+                          <div className="bg-gradient-to-r from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl p-4 sm:p-6 border border-pink-100 dark:border-pink-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-pink-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">6</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">User Privacy & Advertisements</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">User Privacy & Advertisements</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
                                   The App displays advertisements sourced from multiple networks. Some ads may be personalized. Users are advised to verify authenticity of products/services before making purchases. We disclaim responsibility for issues arising from third-party advertisements, websites, or apps accessed through the App.
                                 </p>
                               </div>
@@ -2305,14 +2305,14 @@ const Header = () => {
                           </div>
 
                           {/* Policy Changes */}
-                          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl p-6 border border-yellow-100 dark:border-yellow-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">7</span>
+                          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl p-4 sm:p-6 border border-yellow-100 dark:border-yellow-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-yellow-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">7</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Changes to this Policy</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">Changes to this Policy</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
                                   Marokurukshetram News may revise this Privacy Policy from time to time. The updated version will always be available at: https://marokurukshetram.com/privacy_policy.html. Continued use of the App after updates implies Your acceptance of the revised policy.
                                 </p>
                               </div>
@@ -2320,14 +2320,14 @@ const Header = () => {
                           </div>
 
                           {/* Acceptance */}
-                          <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl p-6 border border-gray-100 dark:border-gray-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-gray-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">8</span>
+                          <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl p-4 sm:p-6 border border-gray-100 dark:border-gray-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">8</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Acceptance of Policy</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">Acceptance of Policy</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
                                   By using this App, You confirm Your acceptance of this Privacy Policy. If You do not agree, please discontinue using the App.
                                 </p>
                               </div>
@@ -2335,17 +2335,17 @@ const Header = () => {
                           </div>
 
                           {/* Contact Us */}
-                          <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl p-6 border border-emerald-100 dark:border-emerald-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <MessageSquare className="w-4 h-4 text-white" />
+                          <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl p-4 sm:p-6 border border-emerald-100 dark:border-emerald-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Contact Us</h4>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">Contact Us</h4>
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm leading-relaxed">
                                   For any queries regarding this Privacy Policy or App practices, please contact:
                                 </p>
-                                <p className="text-gray-700 dark:text-gray-300 text-sm mt-2 font-medium">
+                                <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm mt-2 font-medium">
                                   © Marokurukshetram News Private Limited.
                                 </p>
                               </div>
@@ -2372,74 +2372,284 @@ const Header = () => {
                           <span>{t("profile.termsConditions")}</span>
                         </DropdownMenuItem>
                       </DialogTrigger>
-                      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
-                        <DialogHeader className="text-center pb-6">
-                          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mb-4">
-                            <FileText className="w-8 h-8 text-white" />
+                      <DialogContent className="w-[95vw] max-w-4xl max-h-[95vh] overflow-y-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 mx-4 sm:mx-6 lg:mx-8">
+                        <DialogHeader className="text-center pb-4 sm:pb-6">
+                          <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+                            <FileText className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                           </div>
-                          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">{t("profile.termsConditions")}</DialogTitle>
-                          <div className="flex items-center justify-center mt-2">
-                            <Clock className="w-4 h-4 text-gray-400 dark:text-gray-500 dark:text-gray-400 mr-2" />
-                            <span className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-400">{t("profile.lastUpdated")}: {new Date().toLocaleDateString()}</span>
+                          <DialogTitle className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white px-2">{t("profile.termsConditions")}</DialogTitle>
+                          <div className="flex items-center justify-center mt-2 px-2">
+                            <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 dark:text-gray-500 mr-2" />
+                            <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{t("profile.lastUpdated")}: {new Date().toLocaleDateString()}</span>
                           </div>
                         </DialogHeader>
                         
-                        <div className="space-y-6 py-2">
-                          {/* Acceptance of Terms */}
-                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-6 border border-green-100 dark:border-green-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">1</span>
+                        <div className="space-y-4 sm:space-y-6 py-2 px-2 sm:px-4">
+                          {/* Introduction */}
+                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 sm:p-6 border border-green-100 dark:border-green-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("profile.acceptanceOfTerms")}</h4>
-                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                                  {t("profile.termsInfo1")}
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.companyName")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">
+                                  {t("termsAndConditions.intro1")}
+                                </p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.intro2")}
                                 </p>
                               </div>
                             </div>
                           </div>
-                          
-                          {/* User Obligations */}
-                          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6 border border-blue-100 dark:border-blue-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">2</span>
+
+                          {/* Section 1: Eligibility */}
+                          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-4 sm:p-6 border border-blue-100 dark:border-blue-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">1</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("profile.userObligations")}</h4>
-                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                                  {t("profile.termsInfo2")}
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section1Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section1Content")}
                                 </p>
                               </div>
                             </div>
                           </div>
-                          
-                          {/* Prohibited Uses */}
-                          <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-red-100 dark:border-red-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <span className="text-white font-bold text-sm">3</span>
+
+                          {/* Section 2: User Account and Responsibilities */}
+                          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-4 sm:p-6 border border-purple-100 dark:border-purple-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">2</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("profile.prohibitedUses")}</h4>
-                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                                  {t("profile.termsInfo3")}
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section2Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section2Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section2Agreement")}</p>
+                                <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-4 text-xs sm:text-sm">
+                                  <li>{t("termsAndConditions.section2Item1")}</li>
+                                  <li>{t("termsAndConditions.section2Item2")}</li>
+                                  <li>{t("termsAndConditions.section2Item3")}</li>
+                                </ul>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section2Disclaimer")}
                                 </p>
                               </div>
                             </div>
                           </div>
-                          
-                          {/* Liability */}
-                          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-100 dark:border-purple-800">
-                            <div className="flex items-start mb-4">
-                              <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                <Shield className="w-4 h-4 text-white" />
+
+                          {/* Section 3: Use of the App */}
+                          <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl p-4 sm:p-6 border border-red-100 dark:border-red-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-red-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">3</span>
                               </div>
-                              <div>
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("profile.liability")}</h4>
-                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                                  {t("profile.termsInfo4")}
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section3Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section3Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section3MustNot")}</p>
+                                <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-4 text-xs sm:text-sm">
+                                  <li>{t("termsAndConditions.section3Item1")}</li>
+                                  <li>{t("termsAndConditions.section3Item2")}</li>
+                                  <li>{t("termsAndConditions.section3Item3")}</li>
+                                  <li>{t("termsAndConditions.section3Item4")}</li>
+                                  <li>{t("termsAndConditions.section3Item5")}</li>
+                                </ul>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section3Reserve")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 4: Content Ownership and License */}
+                          <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 rounded-xl p-4 sm:p-6 border border-orange-100 dark:border-orange-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">4</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section4Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section4Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section4License")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section4MustNot")}</p>
+                                <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-xs sm:text-sm">
+                                  <li>{t("termsAndConditions.section4Item1")}</li>
+                                  <li>{t("termsAndConditions.section4Item2")}</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 5: User-Generated Content */}
+                          <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl p-4 sm:p-6 border border-teal-100 dark:border-teal-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-teal-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">5</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section5Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section5Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section5BySubmitting")}</p>
+                                <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-4 text-xs sm:text-sm">
+                                  <li>{t("termsAndConditions.section5Item1")}</li>
+                                  <li>{t("termsAndConditions.section5Item2")}</li>
+                                </ul>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section5Reserve")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 6: Advertisements and Third-Party Links */}
+                          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl p-4 sm:p-6 border border-indigo-100 dark:border-indigo-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-indigo-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">6</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section6Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section6Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section6Advice")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 7: Data and Privacy */}
+                          <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl p-4 sm:p-6 border border-emerald-100 dark:border-emerald-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">7</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section7Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section7Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section7Consent")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 8: Updates and Modifications */}
+                          <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-100 dark:border-violet-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-violet-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">8</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section8Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section8Content")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 9: Disclaimer of Warranties */}
+                          <div className="bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl p-4 sm:p-6 border border-rose-100 dark:border-rose-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-rose-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">9</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section9Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section9Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section9Warranties")}</p>
+                                <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-4 text-xs sm:text-sm">
+                                  <li>{t("termsAndConditions.section9Item1")}</li>
+                                  <li>{t("termsAndConditions.section9Item2")}</li>
+                                  <li>{t("termsAndConditions.section9Item3")}</li>
+                                </ul>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section9Discretion")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 10: Limitation of Liability */}
+                          <div className="bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-900/20 dark:to-gray-900/20 rounded-xl p-4 sm:p-6 border border-slate-100 dark:border-slate-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-slate-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">10</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section10Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section10Intro")}</p>
+                                <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-xs sm:text-sm">
+                                  <li>{t("termsAndConditions.section10Item1")}</li>
+                                  <li>{t("termsAndConditions.section10Item2")}</li>
+                                  <li>{t("termsAndConditions.section10Item3")}</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 11: Termination */}
+                          <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-4 sm:p-6 border border-amber-100 dark:border-amber-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-amber-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">11</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section11Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section11Content")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 12: Governing Law and Jurisdiction */}
+                          <div className="bg-gradient-to-r from-lime-50 to-green-50 dark:from-lime-900/20 dark:to-green-900/20 rounded-xl p-4 sm:p-6 border border-lime-100 dark:border-lime-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-lime-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">12</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section12Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section12Content")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 13: Changes to These Terms */}
+                          <div className="bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl p-4 sm:p-6 border border-sky-100 dark:border-sky-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-sky-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">13</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.section13Title")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-3 text-xs sm:text-sm">{t("termsAndConditions.section13Intro")}</p>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-xs sm:text-sm">
+                                  {t("termsAndConditions.section13Acceptance")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Section 14: Contact Us */}
+                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 sm:p-6 border border-green-100 dark:border-green-800">
+                            <div className="flex flex-col sm:flex-row items-start mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-lg flex items-center justify-center mr-3 mb-2 sm:mb-0 flex-shrink-0">
+                                <span className="text-white font-bold text-xs sm:text-sm">14</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">{t("termsAndConditions.contactTitle")}</h4>
+                                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-2 text-xs sm:text-sm">
+                                  {t("termsAndConditions.contactDesc")}
+                                </p>
+                                <p className="text-gray-700 dark:text-gray-300 font-semibold text-xs sm:text-sm">
+                                  {t("termsAndConditions.copyright")}
                                 </p>
                               </div>
                             </div>
@@ -2657,20 +2867,20 @@ const Header = () => {
                     </Button>
                   </DialogTrigger>
 
-                  <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-center">
+                  <DialogContent className="max-w-md w-[95vw] sm:w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto mx-2 sm:mx-0">
+                    <DialogHeader className="pb-4 sm:pb-6">
+                      <DialogTitle className="text-center text-lg sm:text-xl font-semibold">
                         {authMode === "login" ? t("auth.login") : t("auth.signup")}
                       </DialogTitle>
                     </DialogHeader>
 
                     {authError && (
-                      <div className="p-3 text-red-500 text-sm bg-red-50 border border-red-200 rounded-md mb-4">
+                      <div className="p-3 sm:p-4 text-red-500 text-sm sm:text-sm bg-red-50 border border-red-200 rounded-md mb-4 sm:mb-6">
                         {authError}
                       </div>
                     )}
 
-                    <div className="pb-4">
+                    <div className="pb-4 sm:pb-6">
                       {authMode === "login" ? (
                         <Login
                           onSuccess={handleLoginSuccess}

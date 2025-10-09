@@ -12,6 +12,7 @@ import PoliticsNews from "./components/PoliticsNews";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import PrivacyPolicy from "./components/PrivacyPolicy";
+import TermsAndConditions from "./components/TermsAndConditions";
 import ApiTestPage from "./pages/ApiTest";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

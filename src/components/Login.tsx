@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import apiClient from '@/api/apiClient';
 import ForgotPassword from './ForgotPassword';
 import VerifyOTP from './VerifyOTP';
@@ -35,6 +36,7 @@ interface LoginResponse {
 const Login = ({ onSuccess, onSwitchToSignup, onError, onClearError }: LoginProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     emailOrPhone: "",
     password: "",
@@ -225,46 +227,56 @@ const Login = ({ onSuccess, onSwitchToSignup, onError, onClearError }: LoginProp
 
   // Default login form
   return (
-    <div className="w-full max-w-md mx-auto max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 md:max-h-none md:overflow-visible">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex justify-center mb-4">
+    <div className="w-full max-w-md mx-auto px-4 sm:px-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <img
             src="/lovable-uploads/3b336ab1-e951-42a8-b0c4-758eed877e6a.png"
             alt="App Logo"
-            className="h-18 w-32"
+            className="h-16 w-28 sm:h-18 sm:w-32"
           />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4 sm:space-y-5">
           <Input
             placeholder={t("auth.emailOrPhone") || "Email or Phone"}
             value={formData.emailOrPhone}
             onChange={(e) => handleInputChange("emailOrPhone", e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={loading}
-            className="w-full"
+            className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5"
             autoComplete="username"
           />
 
-          <Input
-            type="password"
-            placeholder={t("auth.password") || "Password"}
-            value={formData.password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={loading}
-            className="w-full"
-            autoComplete="current-password"
-          />
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder={t("auth.password") || "Password"}
+              value={formData.password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading}
+              className="w-full h-12 sm:h-11 text-base sm:text-sm px-4 py-3 sm:py-2.5 pr-12"
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+              disabled={loading}
+            >
+              {showPassword ? <EyeOff className="h-5 w-5 sm:h-4 sm:w-4" /> : <Eye className="h-5 w-5 sm:h-4 sm:w-4" />}
+            </button>
+          </div>
 
           <Button
             type="submit"
             disabled={loading || !formData.emailOrPhone || !formData.password}
-            className="w-full bg-red-500 hover:bg-red-600 text-white"
+            className="w-full h-12 sm:h-11 bg-red-500 hover:bg-red-600 text-white text-base sm:text-sm font-medium rounded-lg transition-colors"
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></span>
+                <span className="animate-spin rounded-full h-5 w-5 sm:h-4 sm:w-4 border-b-2 border-white"></span>
                 {t("common.loading") || "Loading..."}
               </span>
             ) : (
@@ -273,12 +285,12 @@ const Login = ({ onSuccess, onSwitchToSignup, onError, onClearError }: LoginProp
           </Button>
         </div>
 
-        <div className="text-center">
-          <p className="text-sm text-gray-600">
+        <div className="text-center pt-2">
+          <p className="text-sm sm:text-sm text-gray-600">
             {t("auth.noAccount") || "Don't have an account?"}{" "}
             <button
               type="button"
-              className="text-red-600 underline hover:text-red-700 transition-colors"
+              className="text-red-600 underline hover:text-red-700 transition-colors font-medium"
               onClick={onSwitchToSignup}
               disabled={loading}
             >
@@ -290,7 +302,7 @@ const Login = ({ onSuccess, onSwitchToSignup, onError, onClearError }: LoginProp
         <div className="text-center">
           <button
             type="button"
-            className="text-sm text-red-600 underline hover:text-red-700 transition-colors"
+            className="text-sm sm:text-sm text-red-600 underline hover:text-red-700 transition-colors font-medium"
             onClick={() => setCurrentStep('forgot')}
             disabled={loading}
           >

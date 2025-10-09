@@ -14,7 +14,7 @@ const Footer = () => {
     { name: t("footer.aboutUs"), href: "/about" },
     { name: t("footer.contactUs"), href: "/contact" },
     { name: t("footer.privacyPolicy"), href: "/privacy-policy" },
-    { name: t("footer.termsOfService"), href: "#" },
+    { name: t("footer.termsOfService"), href: "/terms-and-conditions" },
     { name: t("footer.advertise"), href: "#" },
     { name: t("footer.jobs"), href: "#" },
   ];
