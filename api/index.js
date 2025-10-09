@@ -706,18 +706,20 @@ export default async function handler(req, res) {
       
         // Special handling for news filtering API
         if (logPrefix === '[News Filter API]' && data.status === 1 && data.result) {
-          console.log(`${logPrefix} Processing news filter results: ${data.result.length} items`);
+          console.log(`${logPrefix} Processing news filter results: ${data.result.items ? data.result.items.length : 0} items`);
           
           // If no news found, provide fallback news data
-          if (data.result.length === 0) {
+          if (!data.result.items || data.result.items.length === 0) {
             console.log(`${logPrefix} No news found for the given category IDs, providing fallback news`);
             
             // Generate fallback news data
             const fallbackNews = generateFallbackNews(query);
-            data.result = fallbackNews;
+            data.result.items = fallbackNews;
+            data.result.total = fallbackNews.length;
+            data.result.totalPages = Math.ceil(fallbackNews.length / (parseInt(query.limit) || 10));
             console.log(`${logPrefix} Generated ${fallbackNews.length} fallback news items`);
           } else {
-            console.log(`${logPrefix} Found ${data.result.length} news items`);
+            console.log(`${logPrefix} Found ${data.result.items.length} news items`);
           }
         }
       
