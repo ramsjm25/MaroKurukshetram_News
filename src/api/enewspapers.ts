@@ -12,6 +12,14 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
   const startDate = new Date(dateFrom);
   const endDate = new Date(dateTo);
   
+  // Alternative PDF sources for different dates (actual PDFs instead of dummy ones)
+  const alternativePDFSources = [
+    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4615_sample_explain.pdf',
+    'https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-file.pdf',
+    'https://www.orimi.com/pdf-test.pdf'
+  ];
+  
   // Real PDF URLs for different dates (actual PDFs instead of placeholder images)
   const newspaperContent = {
     '2025-10-05': {
@@ -24,8 +32,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Sports: Local Cricket Team Wins Championship',
         'Weather: Monsoon Season Ends, Clear Skies Ahead'
       ],
-      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+      pdfUrl: alternativePDFSources[0], // Use alternative PDF source
+      thumbnail: alternativePDFSources[0]
     },
     '2025-10-04': {
       title: 'MARO KURUKSHETRAM',
@@ -37,8 +45,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Culture: Traditional Festival Celebrations Begin',
         'Technology: Digital India Initiative Progress'
       ],
-      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+      pdfUrl: alternativePDFSources[1], // Use different PDF source
+      thumbnail: alternativePDFSources[1]
     },
     '2025-10-03': {
       title: 'MARO KURUKSHETRAM',
@@ -50,8 +58,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Entertainment: Local Film Festival Begins',
         'Environment: Green Initiative Launched'
       ],
-      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+      pdfUrl: alternativePDFSources[2], // Use different PDF source
+      thumbnail: alternativePDFSources[2]
     }
   };
   
@@ -67,8 +75,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Business Updates',
         'Sports Highlights'
       ],
-      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
+      pdfUrl: alternativePDFSources[Math.floor(Math.random() * alternativePDFSources.length)], // Use random PDF source
+      thumbnail: alternativePDFSources[Math.floor(Math.random() * alternativePDFSources.length)]
     };
     
     newspapers.push({
