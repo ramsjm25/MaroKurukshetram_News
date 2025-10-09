@@ -12,20 +12,79 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
   const startDate = new Date(dateFrom);
   const endDate = new Date(dateTo);
   
+  // Sample newspaper content for different dates
+  const newspaperContent = {
+    '2025-10-05': {
+      title: 'MARO KURUKSHETRAM',
+      subtitle: 'Daily News - October 5, 2025',
+      headlines: [
+        'Breaking: Major Political Development in Telangana',
+        'Hyderabad Metro Expansion Phase 3 Announced',
+        'Tech Hub Growth: New IT Companies Set Up Base',
+        'Sports: Local Cricket Team Wins Championship',
+        'Weather: Monsoon Season Ends, Clear Skies Ahead'
+      ],
+      pdfUrl: 'https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+October+5%2C+2025',
+      thumbnail: 'https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+Oct+5%2C+2025'
+    },
+    '2025-10-04': {
+      title: 'MARO KURUKSHETRAM',
+      subtitle: 'Daily News - October 4, 2025',
+      headlines: [
+        'Business: Local Markets Show Positive Growth',
+        'Education: New Schools Inaugurated in District',
+        'Health: Free Medical Camp Organized',
+        'Culture: Traditional Festival Celebrations Begin',
+        'Technology: Digital India Initiative Progress'
+      ],
+      pdfUrl: 'https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+October+4%2C+2025',
+      thumbnail: 'https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+Oct+4%2C+2025'
+    },
+    '2025-10-03': {
+      title: 'MARO KURUKSHETRAM',
+      subtitle: 'Daily News - October 3, 2025',
+      headlines: [
+        'Politics: State Assembly Session Concludes',
+        'Infrastructure: New Road Projects Approved',
+        'Agriculture: Farmers Receive Support Package',
+        'Entertainment: Local Film Festival Begins',
+        'Environment: Green Initiative Launched'
+      ],
+      pdfUrl: 'https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+October+3%2C+2025',
+      thumbnail: 'https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+Oct+3%2C+2025'
+    }
+  };
+  
   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
     const dateStr = d.toISOString().split('T')[0];
+    const content = newspaperContent[dateStr as keyof typeof newspaperContent] || {
+      title: 'MARO KURUKSHETRAM',
+      subtitle: `Daily News - ${d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
+      headlines: [
+        'Local News Update',
+        'Regional Development News',
+        'Community Events',
+        'Business Updates',
+        'Sports Highlights'
+      ],
+      pdfUrl: `https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+${dateStr}`,
+      thumbnail: `https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+${dateStr}`
+    };
     
     newspapers.push({
       id: `fallback-${dateStr}`,
       language_id: languageId,
       date: dateStr,
       pdfPath: null,
-      pdfUrl: `https://via.placeholder.com/800x1200/f3f4f6/9ca3af?text=MARO+KURUKSHETRAM+${dateStr}`,
+      pdfUrl: content.pdfUrl,
       type: 'paper',
-      thumbnail: `https://via.placeholder.com/400x600/f3f4f6/9ca3af?text=Newspaper+${dateStr}`,
+      thumbnail: content.thumbnail,
       addedBy: 'system',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      title: content.title,
+      subtitle: content.subtitle,
+      headlines: content.headlines,
       language: {
         id: languageId,
         languageName: 'English',
@@ -154,17 +213,17 @@ export async function getENewspapers(params: GetENewspapersParams): Promise<ENew
     if (import.meta.env.DEV) {
       console.log('[E-Newspaper] API response:', response.data);
       console.log('[E-Newspaper] Number of newspapers found:', response.data.result?.items?.length || 0);
-      
-      // Log each newspaper's PDF URL for debugging
-      if (response.data.result?.items) {
-        response.data.result.items.forEach((newspaper, index) => {
+    
+    // Log each newspaper's PDF URL for debugging
+    if (response.data.result?.items) {
+      response.data.result.items.forEach((newspaper, index) => {
           console.log(`[E-Newspaper] Newspaper ${index + 1}:`, {
-            date: newspaper.date,
-            pdfUrl: newspaper.pdfUrl,
-            pdfPath: newspaper.pdfPath,
-            hasPdf: !!(newspaper.pdfUrl || newspaper.pdfPath)
-          });
+          date: newspaper.date,
+          pdfUrl: newspaper.pdfUrl,
+          pdfPath: newspaper.pdfPath,
+          hasPdf: !!(newspaper.pdfUrl || newspaper.pdfPath)
         });
+      });
       }
     }
     
