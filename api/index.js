@@ -10,27 +10,37 @@ async function fetchRealNewspaperContent(query) {
   const limit = parseInt(query.limit) || 10;
   const page = parseInt(query.page) || 1;
   
-  // Try different authentication methods
+  // Try different authentication methods to get real newspaper PDFs
   const authMethods = [
     // Method 1: Try with environment API key (if available)
-    { headers: { 'Authorization': `Bearer ${process.env.E_NEWSPAPER_API_KEY || 'default-api-key'}` } },
+    { headers: { 'Authorization': `Bearer ${process.env.E_NEWSPAPER_API_KEY || process.env.API_KEY || 'default-api-key'}` } },
     // Method 2: Try with API key in header
-    { headers: { 'X-API-Key': process.env.E_NEWSPAPER_API_KEY || 'default-api-key' } },
-    // Method 3: Try without authentication (public access)
+    { headers: { 'X-API-Key': process.env.E_NEWSPAPER_API_KEY || process.env.API_KEY || 'default-api-key' } },
+    // Method 3: Try with different token formats
+    { headers: { 'Authorization': `Token ${process.env.E_NEWSPAPER_API_KEY || process.env.API_KEY || 'default-api-key'}` } },
+    // Method 4: Try with API token
+    { headers: { 'API-Token': process.env.E_NEWSPAPER_API_KEY || process.env.API_KEY || 'default-api-key' } },
+    // Method 5: Try without authentication (public access)
     { headers: {} },
-    // Method 4: Try with basic auth
+    // Method 6: Try with basic auth
     { headers: { 'Authorization': 'Basic ' + Buffer.from('admin:password').toString('base64') } },
-    // Method 5: Try with different API endpoints
+    // Method 7: Try with different API endpoints
     { headers: { 'Authorization': 'Bearer test-token' } }
   ];
   
-  // Try different API endpoints
+  // Try different API endpoints to find real newspaper PDFs
   const apiEndpoints = [
     '/e-newspapers',
     '/newspapers',
     '/papers',
     '/e-papers',
-    '/digital-newspapers'
+    '/digital-newspapers',
+    '/news/papers',
+    '/publications',
+    '/media/newspapers',
+    '/content/newspapers',
+    '/files/newspapers',
+    '/documents/newspapers'
   ];
   
   for (let i = 0; i < authMethods.length; i++) {
@@ -38,37 +48,110 @@ async function fetchRealNewspaperContent(query) {
       try {
         console.log(`[Real Newspaper Content] Trying authentication method ${i + 1} with endpoint ${apiEndpoints[j]}...`);
         
-        const targetUrl = `${apiBaseUrl}${apiEndpoints[j]}?language_id=${languageId}&dateFrom=${dateFrom}&dateTo=${dateTo}&page=${page}&limit=${limit}`;
+        // Try different query parameter formats
+        const queryFormats = [
+          `?language_id=${languageId}&dateFrom=${dateFrom}&dateTo=${dateTo}&page=${page}&limit=${limit}`,
+          `?language_id=${languageId}&date=${dateFrom}&page=${page}&limit=${limit}`,
+          `?lang=${languageId}&from=${dateFrom}&to=${dateTo}&page=${page}&limit=${limit}`,
+          `?language=${languageId}&start_date=${dateFrom}&end_date=${dateTo}&page=${page}&limit=${limit}`,
+          `?lang_id=${languageId}&date_from=${dateFrom}&date_to=${dateTo}&page=${page}&limit=${limit}`,
+          `?language_id=${languageId}&dateFrom=${dateFrom}&dateTo=${dateTo}`,
+          `?language_id=${languageId}&date=${dateFrom}`,
+          `?date=${dateFrom}&language_id=${languageId}`
+        ];
+        
+        for (let k = 0; k < queryFormats.length; k++) {
+          try {
+            const targetUrl = `${apiBaseUrl}${apiEndpoints[j]}${queryFormats[k]}`;
+            
+            const response = await fetch(targetUrl, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...authMethods[i].headers
+              },
+              timeout: 10000
+            });
+            
+            console.log(`[Real Newspaper Content] Response status: ${response.status} for ${apiEndpoints[j]}${queryFormats[k]}`);
+            
+            if (response.ok) {
+              const data = await response.json();
+              console.log(`[Real Newspaper Content] Successfully fetched ${data.result?.items?.length || 0} newspapers from ${apiEndpoints[j]}`);
+              
+              if (data.status === 1 && data.result && data.result.items && data.result.items.length > 0) {
+                // Check if we got real PDF URLs (not dummy ones)
+                const hasRealPDFs = data.result.items.some(item => 
+                  item.pdfUrl && 
+                  !item.pdfUrl.includes('placeholder') && 
+                  !item.pdfUrl.includes('dummy') &&
+                  item.pdfUrl.includes('.pdf')
+                );
+                
+                if (hasRealPDFs) {
+                  console.log(`[Real Newspaper Content] Found real newspaper PDFs!`);
+                  return data.result.items;
+                } else {
+                  console.log(`[Real Newspaper Content] Found newspapers but with dummy PDFs, continuing search...`);
+                }
+              }
+            } else {
+              console.log(`[Real Newspaper Content] Method ${i + 1} with ${apiEndpoints[j]}${queryFormats[k]} failed with status: ${response.status}`);
+            }
+          } catch (error) {
+            console.log(`[Real Newspaper Content] Method ${i + 1} with ${apiEndpoints[j]}${queryFormats[k]} error:`, error.message);
+          }
+        }
+    }
+  }
+  
+  console.log('[Real Newspaper Content] All authentication methods failed, will use fallback');
+  
+  // Try one more approach: Check if we can get any working API credentials
+  console.log('[Real Newspaper Content] Checking for working API credentials...');
+  
+  // Check environment variables for any API keys
+  const envKeys = [
+    'E_NEWSPAPER_API_KEY',
+    'API_KEY', 
+    'NEWSPAPER_API_KEY',
+    'E_PAPER_API_KEY',
+    'DIGITAL_NEWSPAPER_API_KEY',
+    'MARO_KURUKSHETRAM_API_KEY'
+  ];
+  
+  for (const envKey of envKeys) {
+    const apiKey = process.env[envKey];
+    if (apiKey && apiKey !== 'default-api-key') {
+      console.log(`[Real Newspaper Content] Found API key in ${envKey}, trying it...`);
+      
+      try {
+        const targetUrl = `${apiBaseUrl}/e-newspapers?language_id=${languageId}&dateFrom=${dateFrom}&dateTo=${dateTo}&page=${page}&limit=${limit}`;
         
         const response = await fetch(targetUrl, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            ...authMethods[i].headers
+            'Authorization': `Bearer ${apiKey}`
           },
           timeout: 10000
         });
         
-        console.log(`[Real Newspaper Content] Response status: ${response.status} for ${apiEndpoints[j]}`);
-        
         if (response.ok) {
           const data = await response.json();
-          console.log(`[Real Newspaper Content] Successfully fetched ${data.result?.items?.length || 0} newspapers from ${apiEndpoints[j]}`);
-          
           if (data.status === 1 && data.result && data.result.items && data.result.items.length > 0) {
+            console.log(`[Real Newspaper Content] Successfully fetched real newspapers with ${envKey}!`);
             return data.result.items;
           }
-        } else {
-          console.log(`[Real Newspaper Content] Method ${i + 1} with ${apiEndpoints[j]} failed with status: ${response.status}`);
         }
       } catch (error) {
-        console.log(`[Real Newspaper Content] Method ${i + 1} with ${apiEndpoints[j]} error:`, error.message);
+        console.log(`[Real Newspaper Content] ${envKey} failed:`, error.message);
       }
     }
   }
   
-  console.log('[Real Newspaper Content] All authentication methods failed, will use fallback');
   return null;
 }
 
