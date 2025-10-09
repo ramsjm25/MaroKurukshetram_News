@@ -105,7 +105,7 @@ const Newspaper = () => {
   const editions: Edition[] = useMemo(() => {
     if (!newspapersData?.result?.items) return [];
     
-    console.log('Processing newspapers data:', newspapersData.result.items);
+    // console.log('Processing newspapers data:', newspapersData.result.items);
     
     return newspapersData.result.items.map((newspaper: ENewspaper) => {
       const displayDate = formatDateForDisplay(newspaper.date, selectedLanguage?.code || "en");
@@ -114,14 +114,16 @@ const Newspaper = () => {
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
       
-      // Log PDF URL for debugging
-      console.log(`Newspaper for ${newspaper.date}:`, {
-        id: newspaper.id,
-        pdfUrl: newspaper.pdfUrl,
-        pdfPath: newspaper.pdfPath,
-        hasPdfUrl: !!newspaper.pdfUrl,
-        hasPdfPath: !!newspaper.pdfPath
-      });
+      // Log PDF URL for debugging (only in development)
+      if (import.meta.env.DEV) {
+        console.log(`Newspaper for ${newspaper.date}:`, {
+          id: newspaper.id,
+          pdfUrl: newspaper.pdfUrl,
+          pdfPath: newspaper.pdfPath,
+          hasPdfUrl: !!newspaper.pdfUrl,
+          hasPdfPath: !!newspaper.pdfPath
+        });
+      }
       
       // Use pdfPath if pdfUrl is not available
       const finalPdfUrl = newspaper.pdfUrl || newspaper.pdfPath || '';
@@ -151,11 +153,17 @@ const Newspaper = () => {
     const newspaper = editions.find(n => n.date === date);
     
     if (newspaper) {
-      console.log('Found newspaper for date:', date, 'PDF URL:', newspaper.pdfUrl);
+      // Only log in development mode
+      if (import.meta.env.DEV) {
+        console.log('Found newspaper for date:', date, 'PDF URL:', newspaper.pdfUrl);
+      }
       return newspaper;
     }
     
-    console.log('No newspaper found for date:', date);
+    // Only log in development mode
+    if (import.meta.env.DEV) {
+      console.log('No newspaper found for date:', date);
+    }
     // Fallback for dates without newspapers
     return {
       id: '',
@@ -413,7 +421,10 @@ const Newspaper = () => {
                   src={`https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(selectedNewspaper.pdfUrl)}`}
                   className="w-full h-full border-0"
                   onLoad={() => {
-                    console.log('PDF loaded successfully via Google Docs viewer');
+                    // Only log in development mode
+                    if (import.meta.env.DEV) {
+                      console.log('PDF loaded successfully via Google Docs viewer');
+                    }
                     setPdfLoading(false);
                     setPdfError(null);
                   }}

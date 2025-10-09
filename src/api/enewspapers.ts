@@ -98,8 +98,11 @@ const publicApiClient = axios.create({
 // Add request interceptor for public API client (no JWT token)
 publicApiClient.interceptors.request.use(
   (config) => {
-    console.log('[E-Newspaper] Making public API request to:', config.url);
-    console.log('[E-Newspaper] Full URL:', config.baseURL + config.url);
+    // Only log in development mode
+    if (import.meta.env.DEV) {
+      console.log('[E-Newspaper] Making public API request to:', config.url);
+      console.log('[E-Newspaper] Full URL:', config.baseURL + config.url);
+    }
     return config;
   },
   (error) => {
@@ -111,11 +114,14 @@ publicApiClient.interceptors.request.use(
 // Add response interceptor for public API client
 publicApiClient.interceptors.response.use(
   (response) => {
-    console.log('[E-Newspaper] API Response received:', {
-      url: response.config.url,
-      status: response.status,
-      data: response.data
-    });
+    // Only log in development mode
+    if (import.meta.env.DEV) {
+      console.log('[E-Newspaper] API Response received:', {
+        url: response.config.url,
+        status: response.status,
+        data: response.data
+      });
+    }
     return response;
   },
   (error) => {
@@ -126,7 +132,10 @@ publicApiClient.interceptors.response.use(
 
 // Fetch e-newspapers with date range and language filter
 export async function getENewspapers(params: GetENewspapersParams): Promise<ENewspaperResponse> {
-  console.log('[E-Newspaper] Fetching e-newspapers with params:', params);
+  // Only log in development mode
+  if (import.meta.env.DEV) {
+    console.log('[E-Newspaper] Fetching e-newspapers with params:', params);
+  }
   
   try {
     // Use public API client (no authentication required)
@@ -141,19 +150,22 @@ export async function getENewspapers(params: GetENewspapersParams): Promise<ENew
       }
     });
     
-    console.log('[E-Newspaper] API response:', response.data);
-    console.log('[E-Newspaper] Number of newspapers found:', response.data.result?.items?.length || 0);
-    
-    // Log each newspaper's PDF URL for debugging
-    if (response.data.result?.items) {
-      response.data.result.items.forEach((newspaper, index) => {
-        console.log(`[E-Newspaper] Newspaper ${index + 1}:`, {
-          date: newspaper.date,
-          pdfUrl: newspaper.pdfUrl,
-          pdfPath: newspaper.pdfPath,
-          hasPdf: !!(newspaper.pdfUrl || newspaper.pdfPath)
+    // Only log in development mode
+    if (import.meta.env.DEV) {
+      console.log('[E-Newspaper] API response:', response.data);
+      console.log('[E-Newspaper] Number of newspapers found:', response.data.result?.items?.length || 0);
+      
+      // Log each newspaper's PDF URL for debugging
+      if (response.data.result?.items) {
+        response.data.result.items.forEach((newspaper, index) => {
+          console.log(`[E-Newspaper] Newspaper ${index + 1}:`, {
+            date: newspaper.date,
+            pdfUrl: newspaper.pdfUrl,
+            pdfPath: newspaper.pdfPath,
+            hasPdf: !!(newspaper.pdfUrl || newspaper.pdfPath)
+          });
         });
-      });
+      }
     }
     
     return response.data;
