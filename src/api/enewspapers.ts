@@ -1,9 +1,19 @@
 import axios from "axios";
 import { ENewspaperResponse, GetENewspapersParams } from "./apiTypes";
 
+// Determine the base URL based on environment (same logic as main API client)
+const getBaseURL = () => {
+  // In development, use the Vite proxy
+  if (import.meta.env.DEV) {
+    return "/api";
+  }
+  // In production, use the Vercel proxy
+  return "/api";
+};
+
 // Create a public API client for e-newspapers (no authentication required)
 const publicApiClient = axios.create({
-  baseURL: '/api', // Use the same base URL as the main API client
+  baseURL: getBaseURL(), // Use the same base URL logic as the main API client
   headers: {
     "Content-Type": "application/json",
   },
@@ -51,8 +61,8 @@ export async function getENewspapers(params: GetENewspapersParams): Promise<ENew
         limit: params.limit || 10,
         language_id: params.language_id,
         dateFrom: params.dateFrom,
-        dateTo: params.dateTo,
-        type: params.type || "paper"
+        dateTo: params.dateTo
+        // Remove the duplicate type parameter - it's already in the URL
       }
     });
     

@@ -33,6 +33,8 @@ export default defineConfig(({ mode }) => ({
             return `/news/urgency-patterns`;
           } else if (type === 'category-keywords') {
             return `/news/category-keywords`;
+          } else if (type === 'e-newspapers') {
+            return `/e-newspapers${url.search}`;
           }
           }
           // For other API calls, remove /api prefix
