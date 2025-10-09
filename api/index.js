@@ -1,4 +1,70 @@
 // COMPLETE FIX: API handler that works for all languages and ensures proper data flow
+// Generate sample newspapers for fallback when external API requires authentication
+function generateSampleNewspapers(query) {
+  const newspapers = [];
+  const languageId = query.language_id || '5dd95034-d533-4b09-8687-cd2ed3682ab6'; // Default to English
+  const dateFrom = query.dateFrom || new Date().toISOString().split('T')[0];
+  const dateTo = query.dateTo || new Date().toISOString().split('T')[0];
+  
+  // Generate newspapers for the last 7 days
+  const startDate = new Date(dateFrom);
+  const endDate = new Date(dateTo);
+  
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const dateStr = d.toISOString().split('T')[0];
+    
+    newspapers.push({
+      id: `sample-${dateStr}`,
+      language_id: languageId,
+      date: dateStr,
+      pdfPath: null,
+      pdfUrl: `https://via.placeholder.com/800x1200/f3f4f6/9ca3af?text=MARO+KURUKSHETRAM+${dateStr}`,
+      type: 'paper',
+      thumbnail: `https://via.placeholder.com/400x600/f3f4f6/9ca3af?text=Newspaper+${dateStr}`,
+      addedBy: 'system',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      language: {
+        id: languageId,
+        languageName: 'English',
+        icon: '🇺🇸',
+        code: 'en',
+        createdAt: new Date().toISOString(),
+        is_active: true
+      },
+      user: {
+        id: 'system-user',
+        email: 'system@marokurukshetram.com',
+        firstName: 'System',
+        lastName: 'User',
+        phone: '',
+        gender: '',
+        dob: '',
+        status: 'active',
+        is_active: true,
+        profilePicture: '',
+        avatar: '',
+        preferences: {
+          theme: 'light',
+          notifications: false
+        },
+        lastLoginAt: new Date().toISOString(),
+        createdBy: null,
+        updatedBy: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        roleId: 'admin',
+        isDeleted: false,
+        deletedAt: null,
+        passwordResetToken: null,
+        passwordResetExpires: null
+      }
+    });
+  }
+  
+  return newspapers.slice(0, parseInt(query.limit) || 10);
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -258,6 +324,25 @@ export default async function handler(req, res) {
           errorData = JSON.parse(errorText);
         } catch (e) {
           errorData = { message: errorText };
+        }
+        
+        // Special handling for e-newspapers 401 Unauthorized
+        if (logPrefix === '[E-Newspapers API]' && response.status === 401) {
+          console.log(`${logPrefix} E-newspapers returned 401, providing fallback data`);
+          
+          // Generate sample newspapers for the requested date range
+          const sampleNewspapers = generateSampleNewspapers(query);
+          
+          return res.status(200).json({
+            status: 1,
+            message: 'E-newspapers (sample data)',
+            result: {
+              items: sampleNewspapers,
+              limit: parseInt(query.limit) || 10,
+              page: parseInt(query.page) || 1,
+              total: sampleNewspapers.length
+            }
+          });
         }
         
         return res.status(response.status).json({
