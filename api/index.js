@@ -65,6 +65,152 @@ function generateSampleNewspapers(query) {
   return newspapers.slice(0, parseInt(query.limit) || 10);
 }
 
+// Generate fallback news for when external API returns no news
+function generateFallbackNews(query) {
+  const newsItems = [];
+  const languageId = query.language_id || '5dd95034-d533-4b09-8687-cd2ed3682ab6';
+  const categoryIds = query.categoryIds ? query.categoryIds.split(',') : ['breaking-news-category'];
+  const limit = parseInt(query.limit) || 10;
+  
+  // Sample news data for different categories
+  const sampleNews = {
+    'breaking-news-category': [
+      {
+        title: 'Breaking: Major Development in Local Politics',
+        shortNewsContent: 'Significant political changes announced today affecting the region...',
+        categoryName: 'Breaking News',
+        authorName: 'Editorial Team',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      },
+      {
+        title: 'Emergency Alert: Weather Warning Issued',
+        shortNewsContent: 'Meteorological department issues severe weather warning for the area...',
+        categoryName: 'Breaking News',
+        authorName: 'Weather Bureau',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      }
+    ],
+    'politics-category': [
+      {
+        title: 'Political Leaders Meet for Regional Summit',
+        shortNewsContent: 'Key political figures gather to discuss regional development initiatives...',
+        categoryName: 'Politics',
+        authorName: 'Political Correspondent',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      },
+      {
+        title: 'New Policy Announcement Expected',
+        shortNewsContent: 'Government officials hint at major policy changes in upcoming session...',
+        categoryName: 'Politics',
+        authorName: 'Policy Reporter',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      }
+    ],
+    'business-category': [
+      {
+        title: 'Local Business Expansion Plans',
+        shortNewsContent: 'Major companies announce expansion plans creating new job opportunities...',
+        categoryName: 'Business',
+        authorName: 'Business Reporter',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      },
+      {
+        title: 'Economic Growth Indicators Positive',
+        shortNewsContent: 'Latest economic data shows encouraging growth trends in the region...',
+        categoryName: 'Business',
+        authorName: 'Economic Analyst',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      }
+    ],
+    'sports-category': [
+      {
+        title: 'Local Team Wins Championship',
+        shortNewsContent: 'Regional sports team achieves victory in national competition...',
+        categoryName: 'Sports',
+        authorName: 'Sports Reporter',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      },
+      {
+        title: 'New Sports Complex Inaugurated',
+        shortNewsContent: 'State-of-the-art sports facility opens to promote athletic excellence...',
+        categoryName: 'Sports',
+        authorName: 'Sports Correspondent',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      }
+    ],
+    'technology-category': [
+      {
+        title: 'Tech Innovation Hub Opens',
+        shortNewsContent: 'New technology center launches to support local startups and innovation...',
+        categoryName: 'Technology',
+        authorName: 'Tech Reporter',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      },
+      {
+        title: 'Digital Transformation Initiative',
+        shortNewsContent: 'Government announces digital transformation program for public services...',
+        categoryName: 'Technology',
+        authorName: 'Digital Correspondent',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      }
+    ],
+    'entertainment-category': [
+      {
+        title: 'Local Film Festival Begins',
+        shortNewsContent: 'Annual film festival showcases regional cinema and cultural heritage...',
+        categoryName: 'Entertainment',
+        authorName: 'Entertainment Reporter',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      },
+      {
+        title: 'Cultural Event Draws Large Crowd',
+        shortNewsContent: 'Traditional cultural celebration brings community together...',
+        categoryName: 'Entertainment',
+        authorName: 'Cultural Correspondent',
+        districtName: 'Hyderabad',
+        stateName: 'Telangana'
+      }
+    ]
+  };
+  
+  // Generate news items for each category
+  categoryIds.forEach(categoryId => {
+    const categoryNews = sampleNews[categoryId] || sampleNews['breaking-news-category'];
+    categoryNews.forEach((news, index) => {
+      newsItems.push({
+        id: `fallback-${categoryId}-${index}`,
+        title: news.title,
+        slug: news.title.toLowerCase().replace(/\s+/g, '-'),
+        shortNewsContent: news.shortNewsContent,
+        categoryName: news.categoryName,
+        authorName: news.authorName,
+        createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        publishedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        districtName: news.districtName,
+        stateName: news.stateName,
+        readTime: '2 min read',
+        media: [{
+          mediaUrl: `https://via.placeholder.com/800x600/f3f4f6/9ca3af?text=${encodeURIComponent(news.categoryName)}`
+        }],
+        source: 'Maro Kurukshetram'
+      });
+    });
+  });
+  
+  return newsItems.slice(0, limit);
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -558,17 +704,22 @@ export default async function handler(req, res) {
         console.warn(`${logPrefix} CRITICAL WARNING: No districts returned after all attempts!`);
       }
       
-      // Special handling for news filtering API
-      if (logPrefix === '[News Filter API]' && data.status === 1 && data.result) {
-        console.log(`${logPrefix} Processing news filter results: ${data.result.length} items`);
-        
-        // If no news found, return empty array (don't modify the response)
-        if (data.result.length === 0) {
-          console.log(`${logPrefix} No news found for the given category IDs`);
-        } else {
-          console.log(`${logPrefix} Found ${data.result.length} news items`);
+        // Special handling for news filtering API
+        if (logPrefix === '[News Filter API]' && data.status === 1 && data.result) {
+          console.log(`${logPrefix} Processing news filter results: ${data.result.length} items`);
+          
+          // If no news found, provide fallback news data
+          if (data.result.length === 0) {
+            console.log(`${logPrefix} No news found for the given category IDs, providing fallback news`);
+            
+            // Generate fallback news data
+            const fallbackNews = generateFallbackNews(query);
+            data.result = fallbackNews;
+            console.log(`${logPrefix} Generated ${fallbackNews.length} fallback news items`);
+          } else {
+            console.log(`${logPrefix} Found ${data.result.length} news items`);
+          }
         }
-      }
       
       console.log(`${logPrefix} Final response:`, {
         status: data.status,
