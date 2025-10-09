@@ -1,13 +1,51 @@
-import apiClient from "./apiClient";
+import axios from "axios";
 import { ENewspaperResponse, GetENewspapersParams } from "./apiTypes";
+
+// Create a public API client for e-newspapers (no authentication required)
+const publicApiClient = axios.create({
+  baseURL: '/api', // Use the same base URL as the main API client
+  headers: {
+    "Content-Type": "application/json",
+  },
+  timeout: 10000, // 10 second timeout
+});
+
+// Add request interceptor for public API client (no JWT token)
+publicApiClient.interceptors.request.use(
+  (config) => {
+    console.log('[E-Newspaper] Making public API request to:', config.url);
+    console.log('[E-Newspaper] Full URL:', config.baseURL + config.url);
+    return config;
+  },
+  (error) => {
+    console.error('[E-Newspaper] Request interceptor error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for public API client
+publicApiClient.interceptors.response.use(
+  (response) => {
+    console.log('[E-Newspaper] API Response received:', {
+      url: response.config.url,
+      status: response.status,
+      data: response.data
+    });
+    return response;
+  },
+  (error) => {
+    console.error('[E-Newspaper] API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
 
 // Fetch e-newspapers with date range and language filter
 export async function getENewspapers(params: GetENewspapersParams): Promise<ENewspaperResponse> {
-  console.log('Fetching e-newspapers with params:', params);
+  console.log('[E-Newspaper] Fetching e-newspapers with params:', params);
   
   try {
-    // Try the actual API endpoint first
-    const response = await apiClient.get<ENewspaperResponse>("/e-newspapers", {
+    // Use public API client (no authentication required)
+    const response = await publicApiClient.get<ENewspaperResponse>("?type=e-newspapers", {
       params: {
         page: params.page || 1,
         limit: params.limit || 10,
@@ -18,13 +56,13 @@ export async function getENewspapers(params: GetENewspapersParams): Promise<ENew
       }
     });
     
-    console.log('E-newspapers API response:', response.data);
-    console.log('Number of newspapers found:', response.data.result?.items?.length || 0);
+    console.log('[E-Newspaper] API response:', response.data);
+    console.log('[E-Newspaper] Number of newspapers found:', response.data.result?.items?.length || 0);
     
     // Log each newspaper's PDF URL for debugging
     if (response.data.result?.items) {
       response.data.result.items.forEach((newspaper, index) => {
-        console.log(`Real Newspaper ${index + 1}:`, {
+        console.log(`[E-Newspaper] Newspaper ${index + 1}:`, {
           date: newspaper.date,
           pdfUrl: newspaper.pdfUrl,
           pdfPath: newspaper.pdfPath,
@@ -34,16 +72,16 @@ export async function getENewspapers(params: GetENewspapersParams): Promise<ENew
     }
     
     return response.data;
-  } catch (error) {
-    console.error('Error fetching e-newspapers from API:', error);
-    console.error('API Error Details:', {
+  } catch (error: any) {
+    console.error('[E-Newspaper] Error fetching e-newspapers from API:', error);
+    console.error('[E-Newspaper] API Error Details:', {
       message: error.message,
       status: error.response?.status,
       data: error.response?.data
     });
     
-    // Return empty result instead of mock data
-    console.log('API failed, returning empty result');
+    // Return empty result for failed requests
+    console.log('[E-Newspaper] API failed, returning empty result');
     return {
       status: 0,
       message: "Failed to fetch newspapers",

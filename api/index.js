@@ -97,6 +97,10 @@ export default async function handler(req, res) {
           targetUrl = `${apiBaseUrl}/roles`;
           logPrefix = '[Roles API]';
           break;
+        case 'e-newspapers':
+          targetUrl = `${apiBaseUrl}/e-newspapers`;
+          logPrefix = '[E-Newspapers API]';
+          break;
         case 'health-check':
           return res.status(200).json({
             status: 1,
@@ -106,7 +110,7 @@ export default async function handler(req, res) {
         default:
           return res.status(400).json({ 
             status: 0, 
-            message: 'Invalid type. Must be one of: languages, categories, states, districts, local-mandis, roles, health-check',
+            message: 'Invalid type. Must be one of: languages, categories, states, districts, local-mandis, roles, e-newspapers, health-check',
             result: null 
           });
       }
