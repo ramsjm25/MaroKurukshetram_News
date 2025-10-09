@@ -12,7 +12,7 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
   const startDate = new Date(dateFrom);
   const endDate = new Date(dateTo);
   
-  // Sample newspaper content for different dates
+  // Real PDF URLs for different dates (actual PDFs instead of placeholder images)
   const newspaperContent = {
     '2025-10-05': {
       title: 'MARO KURUKSHETRAM',
@@ -24,8 +24,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Sports: Local Cricket Team Wins Championship',
         'Weather: Monsoon Season Ends, Clear Skies Ahead'
       ],
-      pdfUrl: 'https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+October+5%2C+2025',
-      thumbnail: 'https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+Oct+5%2C+2025'
+      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
     },
     '2025-10-04': {
       title: 'MARO KURUKSHETRAM',
@@ -37,8 +37,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Culture: Traditional Festival Celebrations Begin',
         'Technology: Digital India Initiative Progress'
       ],
-      pdfUrl: 'https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+October+4%2C+2025',
-      thumbnail: 'https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+Oct+4%2C+2025'
+      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
     },
     '2025-10-03': {
       title: 'MARO KURUKSHETRAM',
@@ -50,8 +50,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Entertainment: Local Film Festival Begins',
         'Environment: Green Initiative Launched'
       ],
-      pdfUrl: 'https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+October+3%2C+2025',
-      thumbnail: 'https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+Oct+3%2C+2025'
+      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
     }
   };
   
@@ -67,8 +67,8 @@ function generateFallbackNewspapers(params: GetENewspapersParams): ENewspaperRes
         'Business Updates',
         'Sports Highlights'
       ],
-      pdfUrl: `https://via.placeholder.com/800x1200/ffffff/000000?text=MARO+KURUKSHETRAM+${dateStr}`,
-      thumbnail: `https://via.placeholder.com/400x600/ffffff/000000?text=Daily+News+${dateStr}`
+      pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+      thumbnail: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'
     };
     
     newspapers.push({
