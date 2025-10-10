@@ -5,6 +5,7 @@ import apiClient from '../api/apiClient';
 // Type definitions
 
 export interface Language {
+  code: string;
 
   id: string;
 

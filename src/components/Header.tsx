@@ -2062,16 +2062,6 @@ const Header = () => {
                             <div className="space-y-3">
                               <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-red-300 transition-colors">
                                 <div className="flex items-center">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("profile.emailNotifications")}</span>
-                                </div>
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                  <input type="checkbox" className="sr-only peer" defaultChecked />
-                                  <div className="w-11 h-6 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
-                                </label>
-                              </div>
-                              <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-red-300 transition-colors">
-                                <div className="flex items-center">
                                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("profile.pushNotifications")}</span>
                                 </div>
@@ -2080,24 +2070,6 @@ const Header = () => {
                                   <div className="w-11 h-6 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
                                 </label>
                               </div>
-                            </div>
-                          </div>
-                          
-                          {/* Privacy Section */}
-                          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
-                            <div className="flex items-center mb-3">
-                              <Shield className="w-5 h-5 text-red-500 mr-2" />
-                              <h3 className="font-semibold text-gray-900 dark:text-white" style={{ color: isDarkMode ? 'white' : undefined }}>{t("profile.privacy")}</h3>
-                            </div>
-                            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-red-300 transition-colors">
-                              <div className="flex items-center">
-                                <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("profile.makeProfilePublic")}</span>
-                              </div>
-                              <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-500"></div>
-                              </label>
                             </div>
                           </div>
                           

@@ -348,8 +348,10 @@
     "noCategories": "No categories available"
   },
   "newspaper": {
+    "title": "E-Newspaper",
     "selectLanguage": "Select Language",
     "selectDate": "Select Date",
+    "loadingNewspapers": "Loading newspaper editions...",
     "loadingEditions": "Loading newspaper editions...",
     "failedToLoad": "Failed to load newspaper editions",
     "tryAgain": "Try Again",
@@ -363,14 +365,25 @@
     "recentEditions": "Recent Editions",
     "viewer": "PDF Viewer",
     "loadingPdf": "Loading PDF...",
+    "loading": "Loading...",
     "pdfLoadError": "Failed to Load PDF",
     "retryInApp": "Retry",
+    "retry": "Retry",
     "openInBrowser": "Open in Browser",
     "noPdfAvailable": "No PDF available for this date",
     "authRequired": "Authentication Required",
     "loginToAccess": "Please log in to access newspapers",
     "invalidPdfUrl": "Invalid PDF URL",
-    "downloadNewspaperQuestion": "Do you want to download this newspaper?"
+    "downloadNewspaperQuestion": "Do you want to download this newspaper?",
+    "errorLoading": "Error loading newspapers",
+    "checkApiEndpoint": "Please check your API endpoint configuration",
+    "noNewspapersFound": "No newspapers found for the selected date range",
+    "tryDifferentDate": "Try selecting a different date",
+    "refresh": "Refresh",
+    "today": "Today",
+    "noNewspaperAvailable": "No newspaper available",
+    "pdfNotAvailable": "PDF not available for this date",
+    "noNewspapersLoaded": "No newspapers loaded"
   },
   "loading": {
     "newsLoading": "Loading news..."
@@ -554,6 +567,8 @@
   },
   "businessNews": "Business News",
   "latestMarketTrends": "Latest market trends and business updates",
+  "jobsNews": "Jobs & Careers",
+  "latestJobOpportunities": "Latest job opportunities and career updates",
   "loadingNews": "Loading news...",
   "fetchError": "Failed to fetch news",
   "somethingWentWrong": "Something went wrong",

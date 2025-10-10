@@ -152,6 +152,17 @@ export const fetchEntertainmentNews = async (languageId: string, limit: number =
 };
 
 /**
+ * Fetch jobs news dynamically
+ */
+export const fetchJobsNews = async (languageId: string, limit: number = 10): Promise<NewsItem[]> => {
+  return fetchNewsByType({
+    languageId,
+    categoryType: 'jobs',
+    limit
+  });
+};
+
+/**
  * Search news with a specific term
  */
 export const searchNews = async (

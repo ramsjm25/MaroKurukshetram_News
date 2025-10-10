@@ -5,6 +5,7 @@ import PoliticsNews from "@/components/PoliticsNews";
 import Categories from "@/components/Categories";
 import BusinessNews from "@/components/BusinessNews";
 import SportsSection from "@/components/SportsSection";
+import JobsNews from "@/components/JobsNews";
 import Footer from "@/components/Footer";
 import TechAndEntertainmentNews from "@/components/TechandEntertainmentNews";
 import Newspaper from "./Newspaper";
@@ -22,6 +23,7 @@ const Index = () => {
         <BusinessNews />
         <TechAndEntertainmentNews />
         <SportsSection />
+        <JobsNews />
       </main>
       <Footer />
     </div>

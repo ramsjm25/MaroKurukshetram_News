@@ -15,8 +15,6 @@ const Footer = () => {
     { name: t("footer.contactUs"), href: "/contact" },
     { name: t("footer.privacyPolicy"), href: "/privacy-policy" },
     { name: t("footer.termsOfService"), href: "/terms-and-conditions" },
-    { name: t("footer.advertise"), href: "#" },
-    { name: t("footer.jobs"), href: "#" },
   ];
 
   const categories = [
@@ -25,6 +23,7 @@ const Footer = () => {
     { name: t("footer.business"), sectionId: "business" },
     { name: t("footer.entertainment"), sectionId: "entertainment" },
     { name: t("footer.technology"), sectionId: "technology" },
+    { name: t("footer.jobs"), sectionId: "jobs" },
   ];
 
   // Handle hash navigation when component mounts or location changes
