@@ -263,25 +263,26 @@ const RelatedNews: React.FC<RelatedNewsProps> = ({
         {relatedNews.map((news) => (
           <div
             key={news.id}
-            className="flex-shrink-0 w-48 cursor-pointer"
+            className="flex-shrink-0 w-40 sm:w-48 cursor-pointer"
             onClick={() => handleClick(news)}
           >
             {/* Image */}
-            <div className="w-full h-32 rounded-md overflow-hidden bg-gray-200">
+            <div className="w-full h-28 sm:h-32 rounded-md overflow-hidden bg-gray-200">
               {news.media?.[0]?.mediaUrl ? (
                 <img
                   src={news.media[0].mediaUrl}
                   alt={news.title}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
-                  <span className="text-2xl">📰</span>
+                  <span className="text-xl sm:text-2xl">📰</span>
                 </div>
               )}
             </div>
             {/* Title */}
-            <h3 className="text-sm font-medium text-gray-800 dark:text-white mt-2 line-clamp-2">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-800 dark:text-white mt-2 line-clamp-2">
               {news.title}
             </h3>
           </div>

@@ -122,7 +122,7 @@ const TechAndEntertainmentNews: React.FC = () => {
                   <img
                     src={getImageUrl(news, 'technology')}
                     alt={news.title}
-                    className="w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-40 sm:h-56 md:h-64 lg:h-72 object-cover transition-transform duration-300 hover:scale-105"
                     loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
@@ -177,7 +177,7 @@ const TechAndEntertainmentNews: React.FC = () => {
                   <img
                     src={getImageUrl(news, 'entertainment')}
                     alt={news.title}
-                    className="w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-40 sm:h-56 md:h-64 lg:h-72 object-cover transition-transform duration-300 hover:scale-105"
                     loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;

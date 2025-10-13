@@ -2091,19 +2091,80 @@ const NewsPage = () => {
                     {/* Mobile Author News - Show below main content on smaller screens */}
                     <div className="xl:hidden mt-6">
                         {(leftSideNews.length > 0 || rightSideNews.length > 0) && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {leftSideNews.length > 0 && (
-                                    <AuthorSidebarNews
-                                        newsItems={leftSideNews}
-                                        side="left"
-                                    />
-                                )}
-                                {rightSideNews.length > 0 && (
-                                    <AuthorSidebarNews
-                                        newsItems={rightSideNews}
-                                        side="right"
-                                    />
-                                )}
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                                    More from Author
+                                </h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {/* Left Side News */}
+                                    {leftSideNews.length > 0 && (
+                                        <div className="space-y-3">
+                                            {leftSideNews.map((news) => (
+                                                <div
+                                                    key={news.id}
+                                                    className="cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
+                                                    onClick={() => navigate(`/news/${news.id}`)}
+                                                >
+                                                    {/* Image */}
+                                                    <div className="w-full h-20 sm:h-24 rounded-t-lg overflow-hidden bg-gray-200">
+                                                        {news.media?.[0]?.mediaUrl ? (
+                                                            <img
+                                                                src={news.media[0].mediaUrl}
+                                                                alt={news.title}
+                                                                className="w-full h-full object-cover"
+                                                                loading="lazy"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
+                                                                <span className="text-lg">📰</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    {/* Title */}
+                                                    <div className="p-2">
+                                                        <h4 className="text-xs font-medium text-gray-800 dark:text-white line-clamp-2">
+                                                            {news.title}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {/* Right Side News */}
+                                    {rightSideNews.length > 0 && (
+                                        <div className="space-y-3">
+                                            {rightSideNews.map((news) => (
+                                                <div
+                                                    key={news.id}
+                                                    className="cursor-pointer bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
+                                                    onClick={() => navigate(`/news/${news.id}`)}
+                                                >
+                                                    {/* Image */}
+                                                    <div className="w-full h-20 sm:h-24 rounded-t-lg overflow-hidden bg-gray-200">
+                                                        {news.media?.[0]?.mediaUrl ? (
+                                                            <img
+                                                                src={news.media[0].mediaUrl}
+                                                                alt={news.title}
+                                                                className="w-full h-full object-cover"
+                                                                loading="lazy"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
+                                                                <span className="text-lg">📰</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    {/* Title */}
+                                                    <div className="p-2">
+                                                        <h4 className="text-xs font-medium text-gray-800 dark:text-white line-clamp-2">
+                                                            {news.title}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>

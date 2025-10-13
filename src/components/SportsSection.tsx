@@ -149,7 +149,7 @@ const SportsSection = () => {
                   >
                     <div className="flex flex-col sm:flex-row h-full">
                       {/* Image */}
-                      <div className="w-full sm:w-2/5 h-48 sm:h-44 md:h-48 lg:h-52 xl:h-56 flex-shrink-0 relative overflow-hidden">
+                      <div className="w-full sm:w-2/5 h-40 sm:h-44 md:h-48 lg:h-52 xl:h-56 flex-shrink-0 relative overflow-hidden">
                         <img
                           src={imageUrl}
                           alt={news.title}

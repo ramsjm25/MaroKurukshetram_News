@@ -234,7 +234,7 @@ const BreakingNews: React.FC = () => {
                   <img
                     src={getImageUrl(item, 'breaking')}
                     alt={item.title || 'Breaking News'}
-                    className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-40 sm:h-64 md:h-80 lg:h-96 object-cover transition-transform duration-300 hover:scale-105"
                     loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;

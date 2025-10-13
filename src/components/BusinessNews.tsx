@@ -159,7 +159,7 @@ const BusinessNews = () => {
                 onClick={() => handleCardClick(news.id)}
               >
                 {/* Image */}
-                <div className="sm:w-[45%] lg:w-[45%] xl:w-[45%] h-56 sm:h-48 lg:h-52 xl:h-56 flex-shrink-0">
+                <div className="sm:w-[45%] lg:w-[45%] xl:w-[45%] h-40 sm:h-48 lg:h-52 xl:h-56 flex-shrink-0">
                   <img
                     src={imageUrl}
                     alt={news.title}
