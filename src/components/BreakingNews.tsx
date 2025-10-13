@@ -77,7 +77,7 @@ const BreakingNews: React.FC = () => {
       console.log('[BreakingNews] Fetching breaking news for language:', language_id);
 
       // Use the new dynamic utility function
-      const news = await fetchBreakingNewsUtil(language_id, 6);
+      const news = await fetchBreakingNewsUtil(language_id, 8);
       
       if (news && news.length > 0) {
         setBreakingNews(news);
@@ -111,9 +111,9 @@ const BreakingNews: React.FC = () => {
     infinite: true,
     speed: 800,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 3000,
     arrows: true,
-    slidesToShow: 1,
+    slidesToShow: 4,
     slidesToScroll: 1,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
