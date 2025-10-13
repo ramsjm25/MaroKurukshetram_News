@@ -21,6 +21,8 @@ import apiClient from "../api/apiClient";
 import { postComment, getComments, getCommentsWithRequest, getCommentCount } from "../api/comments";
 import { Comment, CommentResponse, CommentRequest } from "../api/apiTypes";
 import RelatedNews from "../components/RelatedNews";
+import useAuthorSidebars from "../components/AuthorSidebars";
+import AuthorSidebarNews from "../components/AuthorSidebarNews";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { formatTimeAgo } from "@/utils/timeUtils";
@@ -147,6 +149,13 @@ const NewsPage = () => {
         getCurrentStateId,
         getCurrentDistrictId
     } = useDynamicData();
+
+    // Get author sidebar data
+    const { leftSideNews, rightSideNews, loading: sidebarLoading } = useAuthorSidebars({
+        authorId: newsData?.authorId,
+        language_id: getCurrentLanguageId() || newsData?.language_id || '',
+        currentNewsId: newsData?.id
+    });
     const [isLiked, setIsLiked] = useState(false); // UI state for like button (like Facebook/Instagram)
     const [isSaved, setIsSaved] = useState(false);
     const [likeCount, setLikeCount] = useState(0); // PUBLIC: Like count visible to everyone (like Facebook/Instagram)
@@ -1595,9 +1604,40 @@ const NewsPage = () => {
         <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
             <Header />
             <main className="flex-grow px-4 sm:px-6 lg:px-16 py-6">
-                <div className="max-w-5xl mx-auto">
-                    <article className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                        <div className="p-4 sm:p-6 lg:p-10">
+                <div className="max-w-7xl mx-auto">
+                    {/* Three-column layout: Left Sidebar | Main Content | Right Sidebar */}
+                    <div className="flex gap-6">
+                        {/* Left Sidebar - Author News (Sticky) */}
+                        <div className="hidden xl:block flex-shrink-0">
+                            <div className="sticky top-6 max-h-screen overflow-y-auto">
+                                {sidebarLoading ? (
+                                    <div className="w-32">
+                                        <h3 className="text-sm font-semibold mb-3 text-gray-900 dark:text-white">
+                                            More from Author
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {[1, 2, 3].map((i) => (
+                                                <div key={i} className="animate-pulse">
+                                                    <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2"></div>
+                                                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div>
+                                                    <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : leftSideNews.length > 0 ? (
+                                    <AuthorSidebarNews
+                                        newsItems={leftSideNews}
+                                        side="left"
+                                    />
+                                ) : null}
+                            </div>
+                        </div>
+
+                        {/* Main Content */}
+                        <div className="flex-1 min-w-0">
+                            <article className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                                <div className="p-4 sm:p-6 lg:p-10">
                             {/* Title */}
                             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
                                 {newsData.title}
@@ -2018,6 +2058,55 @@ const NewsPage = () => {
                             currentNewsId={newsData.id}
                         />
                     )}
+                        </div>
+
+                        {/* Right Sidebar - Author News (Sticky) */}
+                        <div className="hidden xl:block flex-shrink-0">
+                            <div className="sticky top-6 max-h-screen overflow-y-auto">
+                                {sidebarLoading ? (
+                                    <div className="w-32">
+                                        <h3 className="text-sm font-semibold mb-3 text-gray-900 dark:text-white">
+                                            More from Author
+                                        </h3>
+                                        <div className="space-y-3">
+                                            {[1, 2, 3].map((i) => (
+                                                <div key={i} className="animate-pulse">
+                                                    <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2"></div>
+                                                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-1"></div>
+                                                    <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : rightSideNews.length > 0 ? (
+                                    <AuthorSidebarNews
+                                        newsItems={rightSideNews}
+                                        side="right"
+                                    />
+                                ) : null}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile Author News - Show below main content on smaller screens */}
+                    <div className="xl:hidden mt-6">
+                        {(leftSideNews.length > 0 || rightSideNews.length > 0) && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {leftSideNews.length > 0 && (
+                                    <AuthorSidebarNews
+                                        newsItems={leftSideNews}
+                                        side="left"
+                                    />
+                                )}
+                                {rightSideNews.length > 0 && (
+                                    <AuthorSidebarNews
+                                        newsItems={rightSideNews}
+                                        side="right"
+                                    />
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </main>
             <Footer />
