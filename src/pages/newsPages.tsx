@@ -12,12 +12,14 @@ import {
     Tag,
     Send,
     Loader2,
+    Flag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { getSingleNews } from "../api/apiSingleNews";
 import apiClient from "../api/apiClient";
+import { apiService } from "../services/api";
 import { postComment, getComments, getCommentsWithRequest, getCommentCount } from "../api/comments";
 import { Comment, CommentResponse, CommentRequest } from "../api/apiTypes";
 import RelatedNews from "../components/RelatedNews";
@@ -185,6 +187,12 @@ const NewsPage = () => {
         total: 0,
         totalPages: 0
     });
+
+    // Report functionality state
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [reportReason, setReportReason] = useState("");
+    const [reportDescription, setReportDescription] = useState("");
+    const [reporting, setReporting] = useState(false);
 
 
     // Fetch likes data using GET endpoint
@@ -1166,6 +1174,42 @@ const NewsPage = () => {
         }
     };
 
+    // Report news handler
+    const handleReportNews = async () => {
+        if (!newsData?.id || !reportReason.trim()) {
+            toast({
+                title: "Error",
+                description: "Please select a reason for reporting this news.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        setReporting(true);
+        try {
+            await apiService.reportNews(newsData.id, reportReason, reportDescription);
+            
+            toast({
+                title: "Report Submitted",
+                description: "Thank you for reporting this news. We will review it shortly.",
+            });
+            
+            // Reset form and close modal
+            setReportReason("");
+            setReportDescription("");
+            setShowReportModal(false);
+        } catch (error: any) {
+            console.error('Error reporting news:', error);
+            toast({
+                title: "Error",
+                description: error.message || "Failed to submit report. Please try again.",
+                variant: "destructive",
+            });
+        } finally {
+            setReporting(false);
+        }
+    };
+
     const handleLike = async () => {
         if (!newsId || liking) return;
 
@@ -1784,6 +1828,16 @@ const NewsPage = () => {
                                         <MessageCircle className="h-4 w-4 mr-1" />
                                         {commentCount.toLocaleString()}
                                     </Button>
+                                    <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        onClick={() => setShowReportModal(true)}
+                                        className="hover:bg-red-50 hover:text-red-600"
+                                        title="Report this news"
+                                    >
+                                        <Flag className="h-4 w-4 mr-1" />
+                                        Report
+                                    </Button>
                                     {/* <Button
                                         variant="ghost"
                                         size="sm"
@@ -2045,6 +2099,93 @@ const NewsPage = () => {
                                     )}
                                 </div>
                             )}
+                        </div>
+                    )}
+
+                    {/* Report News Modal */}
+                    {showReportModal && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+                                            <Flag className="h-5 w-5 mr-2 text-red-500" />
+                                            Report News
+                                        </h3>
+                                        <button
+                                            onClick={() => setShowReportModal(false)}
+                                            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        >
+                                            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Reason for reporting *
+                                        </label>
+                                        <select
+                                            value={reportReason}
+                                            onChange={(e) => setReportReason(e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                            required
+                                        >
+                                            <option value="">Select a reason</option>
+                                            <option value="inappropriate_content">Inappropriate Content</option>
+                                            <option value="misleading_information">Misleading Information</option>
+                                            <option value="spam">Spam</option>
+                                            <option value="harassment">Harassment</option>
+                                            <option value="violence">Violence</option>
+                                            <option value="hate_speech">Hate Speech</option>
+                                            <option value="copyright_violation">Copyright Violation</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div className="mb-6">
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Additional Details (Optional)
+                                        </label>
+                                        <Textarea
+                                            value={reportDescription}
+                                            onChange={(e) => setReportDescription(e.target.value)}
+                                            placeholder="Please provide additional details about why you're reporting this news..."
+                                            className="w-full min-h-[100px] resize-none"
+                                            maxLength={500}
+                                        />
+                                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                            {reportDescription.length}/500 characters
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex gap-3">
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setShowReportModal(false)}
+                                            className="flex-1"
+                                            disabled={reporting}
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            onClick={handleReportNews}
+                                            disabled={reporting || !reportReason.trim()}
+                                            className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                        >
+                                            {reporting ? (
+                                                <>
+                                                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                    Submitting...
+                                                </>
+                                            ) : (
+                                                "Submit Report"
+                                            )}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
 

@@ -493,6 +493,22 @@ export const apiService = {
       console.error('Error fetching roles:', error);
       throw new Error('Failed to fetch roles. Please try again later.');
     }
+  },
+
+  // 7. Report News
+  async reportNews(newsId: string, reason: string, description: string): Promise<any> {
+    try {
+      const response = await retryRequest(async () => 
+        await apiClient.post(`/news/${newsId}/report`, {
+          reason,
+          description
+        })
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error('Error reporting news:', error);
+      throw new Error('Failed to report news. Please try again later.');
+    }
   }
 };
 

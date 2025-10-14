@@ -106,14 +106,24 @@ const BreakingNews: React.FC = () => {
     navigate(`/news/${newsId}`);
   };
 
+  // Detect mobile to enforce exactly 1 slide without relying solely on slick breakpoints
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const handler = (e: MediaQueryListEvent | MediaQueryList) => setIsMobile('matches' in e ? e.matches : (e as MediaQueryList).matches);
+    handler(mq);
+    mq.addEventListener?.('change', handler as (e: MediaQueryListEvent) => void);
+    return () => mq.removeEventListener?.('change', handler as (e: MediaQueryListEvent) => void);
+  }, []);
+
   const settings = {
     dots: false,
     infinite: true,
     speed: 800,
     autoplay: true,
     autoplaySpeed: 3000,
-    arrows: true,
-    slidesToShow: 4,
+    arrows: !isMobile,
+    slidesToShow: isMobile ? 1 : 4,
     slidesToScroll: 1,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
@@ -151,7 +161,10 @@ const BreakingNews: React.FC = () => {
           slidesToShow: 1,
           slidesToScroll: 1,
           arrows: false,
-          dots: true
+          dots: true,
+          centerMode: false,
+          variableWidth: false,
+          adaptiveHeight: true
         }
       },
       {
@@ -226,15 +239,18 @@ const BreakingNews: React.FC = () => {
           {breakingNews.map((item: NewsItem) => (
             <div
               key={item.id}
-              className="px-1 sm:px-2 relative cursor-pointer"
+              className="w-full px-0 sm:px-1 relative cursor-pointer"
               onClick={() => handleCardClick(item.id)}
             >
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
+              <div className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-[1.02]">
                 <div className="relative overflow-hidden">
                   <img
                     src={getImageUrl(item, 'breaking')}
                     alt={item.title || 'Breaking News'}
-                    className="w-full h-40 sm:h-64 md:h-80 lg:h-96 object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-56 sm:h-64 md:h-80 lg:h-96 object-cover transition-transform duration-300 hover:scale-105"
+                    width="100%"
+                    height="auto"
+                    sizes="100vw"
                     loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
