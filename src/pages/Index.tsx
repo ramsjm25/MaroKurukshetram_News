@@ -16,7 +16,6 @@ const Index = () => {
       <Header />
       <main>
         <BreakingNews />
-        <LocalMandi />
         <PoliticsNews />
         <Newspaper />
         <Categories />
@@ -24,6 +23,7 @@ const Index = () => {
         <TechAndEntertainmentNews />
         <SportsSection />
         <JobsNews />
+        <LocalMandi />
       </main>
       <Footer />
     </div>
