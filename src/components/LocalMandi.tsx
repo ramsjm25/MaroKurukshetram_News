@@ -55,13 +55,13 @@ function uniqueBy<T extends Option>(arr: T[], key: keyof T): T[] {
 
 // Trend helpers
 function getTrendColor(trend: string) {
-  if (trend === "up") return "bg-green-100 text-green-700";
-  if (trend === "down") return "bg-red-100 text-red-700";
+  if (trend === "up") return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
+  if (trend === "down") return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300";
   return "bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300";
 }
 function getTrendBgColor(trend: string) {
-  if (trend === "up") return "bg-green-50";
-  if (trend === "down") return "bg-red-50";
+  if (trend === "up") return "bg-green-50 dark:bg-green-900/20";
+  if (trend === "down") return "bg-red-50 dark:bg-red-900/20";
   return "";
 }
 function getTrendIcon(trend: string) {
@@ -278,10 +278,10 @@ export default function LocalMandi() {
   }
 
   return (
-    <div className="p-4 space-y-6">
+    <div className="p-2 sm:p-4 space-y-4 sm:space-y-6 bg-white dark:bg-gray-900">
       {/* Header */}
-      <div className="flex justify-between items-center border-b pb-2">
-        <h1 className="text-3xl font-bold">{t("localMandi.title")}</h1>
+      <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t("localMandi.title")}</h1>
         <div className="flex gap-2">
           <Button variant="ghost" onClick={() => fetchFiltered(1)} disabled={!filtersSelected}>
             <RefreshCw className="w-5 h-5" />
@@ -290,9 +290,9 @@ export default function LocalMandi() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
         <CardHeader>
-          <CardTitle className="text-center">{t("localMandi.filterTitle")}</CardTitle>
+          <CardTitle className="text-center text-gray-900 dark:text-white">{t("localMandi.filterTitle")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -395,7 +395,7 @@ export default function LocalMandi() {
               <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50 dark:bg-gray-700 border-b-2 border-gray-200 dark:border-gray-600">
-                  <TableHead className="text-center font-bold text-gray-800 dark:text-white py-4 min-w-[120px]">
+                  <TableHead className="text-center font-bold text-gray-800 dark:text-white py-2 sm:py-4 min-w-[120px]">
                     {t("localMandi.tableHeaders.commodity")}
                   </TableHead>
                   <TableHead className="text-center font-bold text-gray-800 dark:text-white min-w-[100px]">
@@ -423,9 +423,9 @@ export default function LocalMandi() {
                   filteredData.map((item, index) => (
                     <TableRow
                       key={index}
-                      className={`hover:bg-blue-50 transition-colors border-b border-gray-100 ${getTrendBgColor(item.trend)}`}
+                      className={`hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-600 ${getTrendBgColor(item.trend)}`}
                     >
-                      <TableCell className="text-center py-4 min-w-[120px]">
+                      <TableCell className="text-center py-2 sm:py-4 min-w-[120px]">
                         <div className="flex items-center justify-center gap-2 sm:gap-3">
                           <span className="text-lg sm:text-2xl">{item.icon}</span>
                           <div className="text-left">
@@ -463,7 +463,7 @@ export default function LocalMandi() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                    <TableCell colSpan={7} className="text-center py-4 sm:py-6 text-gray-500 dark:text-gray-400">
                       {t("localMandi.noData")}
                     </TableCell>
                   </TableRow>

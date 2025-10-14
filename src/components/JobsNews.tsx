@@ -79,14 +79,14 @@ const JobsNews = () => {
   };
 
   return (
-    <section id="jobs" className="py-8 sm:py-12 bg-gray-50 font-mandali scroll-mt-20 sm:scroll-mt-24">
+    <section id="jobs" className="py-8 sm:py-12 bg-gray-50 dark:bg-gray-900 font-mandali scroll-mt-20 sm:scroll-mt-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 text-center">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 text-center">
             {t("jobsNews")}
           </h2>
-          <p className="text-base sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto text-center">
+          <p className="text-base sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-center">
             {t("latestJobOpportunities")}
           </p>
         </div>
@@ -95,7 +95,7 @@ const JobsNews = () => {
         {loading && (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600 mr-2" />
-            <span className="text-gray-600">{t("loadingNews")}</span>
+            <span className="text-gray-600 dark:text-gray-400">{t("loadingNews")}</span>
           </div>
         )}
         {error && <p className="text-center text-red-500">{error}</p>}
@@ -114,7 +114,7 @@ const JobsNews = () => {
             return (
               <Card
                 key={news.id}
-                className="overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row lg:flex-row xl:flex-row"
+                className="overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer flex flex-col sm:flex-row lg:flex-row xl:flex-row bg-white dark:bg-gray-800"
                 onClick={() => handleCardClick(news.id)}
               >
                 {/* Image */}
@@ -136,20 +136,20 @@ const JobsNews = () => {
                 <div className="sm:w-[55%] lg:w-[55%] xl:w-[55%] flex flex-col justify-between p-3 sm:p-4 md:p-5 h-auto sm:h-48 lg:h-52 xl:h-56">
                   <CardHeader className="p-0 pb-3">
                     <div className="flex flex-row items-center justify-between gap-2 mb-3">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium w-fit">
+                      <span className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 px-2 py-1 rounded text-xs font-medium w-fit">
                         {category}
                       </span>
-                      <div className="flex items-center text-gray-500 text-xs">
+                      <div className="flex items-center text-gray-500 dark:text-gray-400 text-xs">
                         <Clock className="h-3 w-3 mr-1" />
                         {time}
                       </div>
                     </div>
-                    <CardTitle className="text-base sm:text-lg md:text-xl line-clamp-2 leading-tight">
+                    <CardTitle className="text-base sm:text-lg md:text-xl line-clamp-2 leading-tight text-gray-900 dark:text-white">
                       {news.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-0 flex-1 flex flex-col justify-end">
-                    <p className="text-gray-600 text-xs sm:text-sm md:text-base line-clamp-3 leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm md:text-base line-clamp-3 leading-relaxed">
                       {summary}
                     </p>
                   </CardContent>
@@ -160,7 +160,7 @@ const JobsNews = () => {
         </div>
 
         {jobsNews.length === 0 && !loading && (
-          <div className="text-center py-12 text-gray-600">
+          <div className="text-center py-12 text-gray-600 dark:text-gray-400">
             {t("labels.noNewsAvailable")}
             <span className="block text-sm mt-1">
               No jobs news available
