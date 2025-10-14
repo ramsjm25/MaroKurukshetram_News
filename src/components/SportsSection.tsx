@@ -80,19 +80,19 @@ const SportsSection = () => {
     <section id="sports" className="font-mandali py-8 sm:py-12 bg-white scroll-mt-20 sm:scroll-mt-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 text-center">
             {t("sports.title")}
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto text-center">
             {t("sports.subtitle")}
           </p>
         </div>
 
         {/* Full-width sports news */}
         <div>
-          <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">
+          {/* <h3 className="text-xl sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">
             {t("sports.latestNews")}
-          </h3>
+          </h3> */}
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-8 sm:py-12">

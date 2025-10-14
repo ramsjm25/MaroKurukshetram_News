@@ -380,7 +380,10 @@
     "technologyLatestNews": "ಇತ್ತೀಚಿನ ತಂತ್ರಜ್ಞಾನ ಸುದ್ದಿ",
     "entertainmentLatestNews": "ಇತ್ತೀಚಿನ ಮನರಂಜನಾ ಸುದ್ದಿ",
     "breakingNews": "ತಾಜಾ ಸುದ್ದಿ",
-    "latestUpdates": "ರಾಜಕೀಯ ಜಗತ್ತಿನ ಇತ್ತೀಚಿನ ನವೀಕರಣಗಳು"
+    "latestUpdates": "ರಾಜಕೀಯ ಜಗತ್ತಿನ ಇತ್ತೀಚಿನ ನವೀಕರಣಗಳು",
+    "latestTechUpdates": "ಇತ್ತೀಚಿನ ತಂತ್ರಜ್ಞಾನ ನವೀಕರಣಗಳು ಮತ್ತು ಆವಿಷ್ಕಾರಗಳು",
+    "latestEntertainmentUpdates": "ಇತ್ತೀಚಿನ ಮನರಂಜನಾ ಸುದ್ದಿ ಮತ್ತು ನವೀಕರಣಗಳು",
+    "latestBreakingUpdates": "ಇತ್ತೀಚಿನ ತಾಜಾ ಸುದ್ದಿ ಮತ್ತು ತುರ್ತು ನವೀಕರಣಗಳು"
   },
   "labels": {
     "liveUpdate": "ಲೈವ್ ಅಪ್ಡೇಟ್",

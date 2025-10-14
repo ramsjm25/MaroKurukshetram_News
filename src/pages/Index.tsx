@@ -7,7 +7,8 @@ import BusinessNews from "@/components/BusinessNews";
 import SportsSection from "@/components/SportsSection";
 import JobsNews from "@/components/JobsNews";
 import Footer from "@/components/Footer";
-import TechAndEntertainmentNews from "@/components/TechandEntertainmentNews";
+import Technology from "@/components/Technology";
+import Entertainment from "@/components/Entertainment";
 import Newspaper from "./Newspaper";
 
 const Index = () => {
@@ -20,7 +21,8 @@ const Index = () => {
         <Newspaper />
         <Categories />
         <BusinessNews />
-        <TechAndEntertainmentNews />
+        <Technology />
+        <Entertainment />
         <SportsSection />
         <JobsNews />
         <LocalMandi />

@@ -380,7 +380,10 @@
     "latestUpdates": "राजनीतिक दुनिया से नवीनतम अपडेट",
     "technologyLatestNews": "नवीनतम प्रौद्योगिकी समाचार",
     "entertainmentLatestNews": "नवीनतम मनोरंजन समाचार",
-    "breakingNews": "ताज़ा खबर"
+    "breakingNews": "ताज़ा खबर",
+    "latestTechUpdates": "नवीनतम प्रौद्योगिकी अपडेट और नवाचार",
+    "latestEntertainmentUpdates": "नवीनतम मनोरंजन समाचार और अपडेट",
+    "latestBreakingUpdates": "नवीनतम ताज़ा खबर और जरूरी अपडेट"
   },
   "labels": {
     "liveUpdate": "लाइव अपडेट",

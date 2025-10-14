@@ -361,7 +361,10 @@
     "latestUpdates": "రాజకీయ ప్రపంచంలోని తాజా అప్‌డేట్‌లు",
     "technologyLatestNews": "తాజా సాంకేతిక వార్తలు",
     "entertainmentLatestNews": "తాజా వినోద వార్తలు",
-    "breakingNews": "తాజా వార్తలు"
+    "breakingNews": "తాజా వార్తలు",
+    "latestTechUpdates": "తాజా సాంకేతిక అప్‌డేట్‌లు మరియు ఆవిష్కరణలు",
+    "latestEntertainmentUpdates": "తాజా వినోద వార్తలు మరియు అప్‌డేట్‌లు",
+    "latestBreakingUpdates": "తాజా తాజా వార్తలు మరియు అత్యవసర అప్‌డేట్‌లు"
   },
   "labels": {
     "liveUpdate": "లైవ్ అప్‌డేట్",

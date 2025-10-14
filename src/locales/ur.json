@@ -380,7 +380,10 @@
     "latestUpdates": "سیاست کی دنیا سے تازہ ترین اپ ڈیٹس",
     "technologyLatestNews": "تازہ ترین ٹیکنالوجی کی خبریں",
     "entertainmentLatestNews": "تازہ ترین تفریحی خبریں",
-    "breakingNews": "بریکنگ نیوز"
+    "breakingNews": "بریکنگ نیوز",
+    "latestTechUpdates": "تازہ ترین ٹیکنالوجی اپ ڈیٹس اور اختراعات",
+    "latestEntertainmentUpdates": "تازہ ترین تفریحی خبریں اور اپ ڈیٹس",
+    "latestBreakingUpdates": "تازہ ترین بریکنگ نیوز اور فوری اپ ڈیٹس"
   },
   "labels": {
     "liveUpdate": "لائیو اپ ڈیٹ",

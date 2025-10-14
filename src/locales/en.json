@@ -400,7 +400,10 @@
     "technologyLatestNews": "Latest Technology News",
     "entertainmentLatestNews": "Latest Entertainment News",
     "breakingNews": "Breaking News",
-    "latestUpdates": "The latest updates from the world of politics"
+    "latestUpdates": "The latest updates from the world of politics",
+    "latestTechUpdates": "Latest technology updates and innovations",
+    "latestEntertainmentUpdates": "Latest entertainment news and updates",
+    "latestBreakingUpdates": "Latest breaking news and urgent updates"
   },
   "labels": {
     "liveUpdate": "Live Update",

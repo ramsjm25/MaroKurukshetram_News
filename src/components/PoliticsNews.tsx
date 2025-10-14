@@ -136,10 +136,10 @@ const PoliticsNews: React.FC = () => {
     <section id="politics" className="font-mandali py-8 sm:py-12 bg-gray-50 dark:bg-gray-800 scroll-mt-24">
       <div className="container mx-auto px-3 sm:px-4">
         <div className="mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2 text-center">
             {t('headings.politicsLatestNews')}
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">{t('headings.latestUpdates')}</p>
+          <p className="text-base sm:text-base md:text-lg text-gray-600 dark:text-gray-400 text-center">{t('headings.latestUpdates')}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
